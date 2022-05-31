@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/ic_search_24"
+        android:id="@+id/fragment_search"
+        android:title="검색해서 찾기" />
+    <item
+        android:icon="@drawable/ic_map_24"
+        android:id="@+id/fragment_map"
+        android:title="지도로 찾기" />
+</menu>
