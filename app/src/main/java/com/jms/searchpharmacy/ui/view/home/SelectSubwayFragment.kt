@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +42,14 @@ class SelectSubwayFragment : Fragment() {
 
                     fun bind(station: String) {
                         // 역이름 받아서 배치
-                        itemInDetailSubwayBinding.stationNameText.text = station
+                        itemView.apply {
+                            itemInDetailSubwayBinding.stationNameText.text = station
+                            itemInDetailSubwayBinding.stationNameText.setOnClickListener {
+                                val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief(station)
+                                findNavController().navigate(action)
+                            }
+                        }
+
                     }
 
                 }
@@ -72,10 +81,10 @@ class SelectSubwayFragment : Fragment() {
                 init {
                     toggleButton.observe(viewLifecycleOwner){ isClicked ->
                         if(isClicked) {
-                            Toast.makeText(requireContext(), "isClicked: $isClicked", Toast.LENGTH_SHORT).show()
                             itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = true
                             itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(line)
                             itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
+                            //itemInSelectSubwayBinding.detailOfLineRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL))
                         } else {
                             itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = false
                         }
@@ -83,7 +92,7 @@ class SelectSubwayFragment : Fragment() {
                 }
                 fun bind(line: Line) {
                     this.line = line
-                    //itemInSelectSubwayBinding.colorOfLine.setBackgroundColor(Color.parseColor(line.color))
+
                     itemInSelectSubwayBinding.colorOfLine.circleBackgroundColor = Color.parseColor(line.color)
                     itemInSelectSubwayBinding.lineNumberText.text = line.name
                     itemInSelectSubwayBinding.lineNumberLayout.setOnClickListener {

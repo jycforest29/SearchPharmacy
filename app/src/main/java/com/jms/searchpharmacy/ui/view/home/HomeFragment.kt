@@ -35,6 +35,11 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentToSelectSubwayFragment()
             findNavController().navigate(action)
         }
+        binding.searchAddr.setOnClickListener{
+            val action = HomeFragmentDirections.actionHomeFragmentToBriefFragment(null)
+            findNavController().navigate(action)
+        }
+
     }
 
 

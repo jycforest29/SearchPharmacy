@@ -1,6 +1,8 @@
 package com.jms.searchpharmacy.data.model.stations
 
 import android.graphics.Color
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 class Line1() : Line() {
     override val num = 1

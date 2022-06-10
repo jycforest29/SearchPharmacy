@@ -4,10 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.view.home.HomeFragment">
 
 
     <ImageView
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/imageview_bg"
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -24,16 +29,17 @@
         android:singleLine="true"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="@id/banner"
         android:textSize="20sp"
         android:layout_marginBottom="15dp"
-        android:text="현재 서울 지역의 약국, 의원, 치과의원, 병원, 종합병원에 관련된 정보만 제공됩니다."
+        android:text="현재 서울 지역의 약국, 의원, 치과의원, 병원에 관련된 정보만 제공됩니다."
         />
 
     <LinearLayout
         android:id="@+id/middle_layout"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintTop_toBottomOf="@id/banner"
@@ -41,52 +47,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/search_subway"
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
             >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
                 <LinearLayout
                     android:layout_margin="5dp"
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_gravity="center_vertical"
                         app:srcCompat="@drawable/train" />
                     <TextView
                         android:id="@+id/search_subway_text"
-                        android:layout_marginStart="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="역세권 기준으로 찾기" />
+                        android:text="역세권 찾기" />
                 </LinearLayout>
-
-
-            </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/search_my_place"
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
@@ -96,26 +94,24 @@
                 android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                android:gravity="center"
+                android:orientation="vertical">
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/location" />
                 <TextView
-                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="내 위치 기준으로 찾기" />
+                    android:text="내 위치 찾기" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/search_addr"
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             app:cardCornerRadius="10dp"
             app:cardElevation="4dp"
@@ -125,19 +121,17 @@
                 android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
                     app:srcCompat="@drawable/inspection" />
                 <TextView
-                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="행정동 이름 검색하기"
+                    android:text="행정동 검색"
                     />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -151,8 +145,8 @@
         app:cardElevation="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         app:cardCornerRadius="10dp"
         >
