@@ -1,5 +1,6 @@
 package com.jms.searchpharmacy.data.api.server;
 
+import com.jms.searchpharmacy.data.model.server.Convenience;
 import com.jms.searchpharmacy.data.model.server.Hospital;
 import com.jms.searchpharmacy.data.model.server.Line;
 import com.jms.searchpharmacy.data.model.server.Pharmacy;
@@ -40,6 +41,9 @@ public interface ServerApi {
 
     @GET("detail/{index}/pharmacy")
     Call<List<Pharmacy>> getPharmacyList(@Path("index") int index);
+
+    @GET("detail/{index}/convenience")
+    Call<List<Convenience>> getConvenienceList(@Path("index") int index);
 
     @GET("getTop5")
     Call<List<PharmacyLocation>> getTop5();
