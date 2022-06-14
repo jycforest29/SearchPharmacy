@@ -37,33 +37,37 @@
     <td>Hospital</td>
     <td>int index(pk)<br>String name<br>String type<br>String address<br>String loadaddress<br>String startdate<br>int totalDoctor</td>
     <td></td>
-    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출<br>도로명 주소가 없는 객체도 존재<br>loadAddress제외 모든 병원 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
+    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출<br>도로명 주소만 없는 객체는 존재<br>loadAddress제외 모든 병원 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
     <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<br> 우편번호 DB(우체국)<br>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)</td>
   </tr>
   <tr>
     <td>Pharmacy</td>
     <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
     <td></td>
-    <td>도로명 주소가 없는 객체도 존재<br>loadAddress제외 모든 약국 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
+    <td>도로명 주소만 없는 객체는 존재<br>loadAddress제외 모든 약국 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
     <td>동일</td>
   </tr>
   <tr>
     <td>Convenience</td>
     <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
     <td></td>
-    <td>영업상태 칼럼의 값이 영업/정상, 휴업인 값들 추출<br>도로명주소나 도로명우편번호 칼럼의 값이 nan인 경우는 열 제거</td>
+    <td>영업상태 칼럼의 값이 영업/정상, 휴업인 값들 추출<br>도로명주소나 도로명우편번호 칼럼의 값이 nan인 경우는 열 제거<br>도로명 주소, 우편번호, 법정동명이 없는 객체는 존재하지 않음<br>convInfo 중복제거 안해서 중복된 객체가 들어가있음 -> PharmacyLocation도 다시 생성해야<br>loadAddress제외 모든 편의점 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
     <td>동일</td>
   </tr>
   <tr>
     <td>PharmacyLocation</td>
     <td>int index(pk)<br>String dong<br>String loadaddress<br>int hospitalcount<br>int pharmacycount<br>int conveniencecount<br>int doctorcount<br>float hospitalperpharmacy<br>float doctorperpharmacy<br>float convenienceperpharmacy<br>int viewcount</td>
-    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
+    <td></td>
     <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
     <td>동일</td>
   </tr>
 </table><br>
 ![image](https://user-images.githubusercontent.com/103106183/173526482-8ecc0622-fa11-4997-9b4d-e84dee758d51.png)<br>
-![image](https://user-images.githubusercontent.com/103106183/173537426-fe62cb37-2eba-4aa9-b6eb-0c1d912b2a0c.png)
+![image](https://user-images.githubusercontent.com/103106183/173537426-fe62cb37-2eba-4aa9-b6eb-0c1d912b2a0c.png)<br>
+![image](https://user-images.githubusercontent.com/103106183/173542093-c70ba0eb-ceeb-466e-bc8a-225a02f69570.png)<br>
+![image](https://user-images.githubusercontent.com/103106183/173544183-bb7ec2eb-d4f2-44bd-977f-8eb9623d489e.png)
+
+
 
 
 # api 명세서
