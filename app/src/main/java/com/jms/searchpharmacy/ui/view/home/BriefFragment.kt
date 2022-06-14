@@ -29,6 +29,7 @@ class BriefFragment : Fragment() {
 
     private val list = listOf("","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370")
 
+    //private val
 
     private inner class BriefAdapter()
         : RecyclerView.Adapter<BriefAdapter.BriefViewHolder>() {
@@ -103,7 +104,9 @@ class BriefFragment : Fragment() {
 //            val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.roadNameAddr)
 //            findNavController().navigate(action)
         }
-        convertToDongName(args.dongName)
+
+
+
     }
 
     override fun onDestroyView() {
@@ -111,9 +114,5 @@ class BriefFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun convertToDongName(stationName: String?) {
-        stationName?.let {
-            // null이 아니면 처리
-        }
-    }
+
 }

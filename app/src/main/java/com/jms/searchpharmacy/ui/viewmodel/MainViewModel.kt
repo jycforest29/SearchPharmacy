@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.data.model.server.Line
+import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.data.model.server.Station
 import retrofit2.Callback
 
@@ -61,27 +62,29 @@ class MainViewModel(
         })
     }
 
-    //private val _fetchedStations = MutableLiveData<List<Station>>()
-    //val fetchedStations: LiveData<List<Station>> get() = _fetchedStations
+    private val _fetchedPLs = MutableLiveData<List<PharmacyLocation>>()
+    val fetchedPLs: LiveData<List<PharmacyLocation>> get() = _fetchedPLs
 
-//    var fetchedStations: List<Station> = listOf()
-//    fun fetchStations(line_name: String): List<Station>? = viewModelScope.launch {
-//        val call = mainRepository.fetchStations(line_name)
-//
-//        return call.enqueue(object: Callback<List<Station>> {
-//            override fun onResponse(call: Call<List<Station>>, response: Response<List<Station>>) {
-//                response.body()?.let{
-//                   it
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-//                Log.d("TAG","List<Line> Callback.onFailure called")
-//                    null
-//            }
-//
-//        })
-//    }
+    fun fetchPLs(dongName: String) = viewModelScope.launch {
+        val call = mainRepository.fetchPLs(dongName)
+
+        call.enqueue(object: Callback<List<PharmacyLocation>>{
+            override fun onResponse(
+                call: Call<List<PharmacyLocation>>,
+                response: Response<List<PharmacyLocation>>
+            ) {
+                response.body()?.let{
+                    _fetchedPLs.postValue(it)
+                }
+            }
+
+            override fun onFailure(call: Call<List<PharmacyLocation>>, t: Throwable) {
+                Log.d("TAG","List<Line> Callback.onFailure called")
+            }
+
+        })
+
+    }
 
 
 

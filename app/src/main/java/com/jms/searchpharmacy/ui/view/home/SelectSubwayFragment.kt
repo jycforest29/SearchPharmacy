@@ -223,37 +223,9 @@ class SelectSubwayFragment : Fragment() {
                     itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = isClicked
                 }
 
-//                viewModel.fetchedStations.observe(viewLifecycleOwner){
-//                    stationList = it
-//                }
+
 
             }
-//            private fun getStationsByLine1(line_name: String) {
-//                val call = serverApi.getStationByLine(line_name)
-//                call.enqueue(object : Callback<List<Station>> {
-//                    override fun onResponse(
-//                        call: Call<List<Station>>,
-//                        response: Response<List<Station>>
-//                    ) {
-//                        val stationResponse = response.body()!!
-//                        var stationList = stationResponse
-//                        itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(stationList)
-//                        itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
-//                        itemInSelectSubwayBinding.detailOfLineRecyclerView.addItemDecoration(
-//                            DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL)
-//                        )
-//
-//                    }
-//
-//                    override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-//                        Toast.makeText(
-//                            requireContext(),
-//                            "An error has occured",
-//                            Toast.LENGTH_LONG
-//                        ).show()
-//                    }
-//                })
-//            }
 
             fun bind(line: Line) {
                 this.line = line
@@ -331,24 +303,6 @@ class SelectSubwayFragment : Fragment() {
 
     }
 
-
-//    private fun getLines1() {
-//
-//        val call: Call<List<Line>> = serverApi.getLines()
-//        call.enqueue(object : Callback<List<Line>> {
-//            override fun onResponse(call: Call<List<Line>>, response: Response<List<Line>>) {
-//                val lineResponse = response.body()!!
-//                lineList = lineResponse
-//                binding.allLinesRecyclerView.adapter = BriefNameAdapter(lineList)
-//                binding.allLinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-//            }
-//
-//            override fun onFailure(call: Call<List<Line>>, t: Throwable) {
-//                Toast.makeText(requireContext(), "An error has occured", Toast.LENGTH_LONG)
-//                    .show()
-//            }
-//        })
-//    }
 
     override fun onDestroyView() {
         _binding = null
