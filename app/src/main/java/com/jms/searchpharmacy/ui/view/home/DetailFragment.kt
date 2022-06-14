@@ -38,14 +38,9 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    private val latLngLiveData: MutableLiveData<LatLng> = MutableLiveData()
     private val detailFragmentList = arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
 
     private val isExpandedLiveData : MutableLiveData<Boolean> = MutableLiveData(true)
-
-    private val markerPharListLiveData: MutableLiveData<List<Marker>> = MutableLiveData()
-    private val markerHopsListLiveData: MutableLiveData<List<Marker>> = MutableLiveData()
-    private val markerConvListLiveData: MutableLiveData<List<Marker>> = MutableLiveData()
 
 
 
@@ -121,58 +116,9 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun requestMarkerInfo() {
-        //여기서 마커리스트 만들어서 처리
-        //TODO{마커리스트}
-        //약국 마커
-        /*
-        val markerPhar = Marker()
-        markerPhar.apply {
-            icon = OverlayImage.fromResource(R.drawable.ic_phar_marker)
-            width= 100
-            height = 100
-            position = it
-            map = naverMap
-        }
-
-        //병원 마커
-        val markerHosp = Marker()
-        markerHosp.apply {
-            icon = OverlayImage.fromResource(R.drawable.ic_hosp_marker)
-            width= 100
-            height = 100
-            position = it
-            map = naverMap
-        }
-
-        //편의점 마커
-        val markerConv = Marker()
-        markerHosp.apply {
-            icon = OverlayImage.fromResource(R.drawable.ic_conv_marker)
-            width= 100
-            height = 100
-            position = it
-            map = naverMap
-        }
-
-         */
-
-    }
 
     private fun setupUISettings() {
 
-        // 옵저버
-        latLngLiveData.observe(viewLifecycleOwner){
-            val cameraUpdate = CameraUpdate.scrollTo(it)
-
-            this.naverMap.moveCamera(cameraUpdate)
-
-
-            //마커정보 요청하면
-            requestMarkerInfo()
-            //TODO{마커 정보 요청청}
-
-        }
 
         isExpandedLiveData.observe(viewLifecycleOwner) {
             binding.viewPager2WithMap.isVisible = it
@@ -195,17 +141,66 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         this.naverMap = naverMap
         setupUISettings()
 
-        viewModel.searchResult.observe(viewLifecycleOwner){ response->
+        viewModel.searchPhar.observe(viewLifecycleOwner){ response->
             val addresses: List<Addresse>? = response?.addresses
 
             addresses?.let {
 
-                latLngLiveData.postValue(LatLng(addresses[0].y!!.toDouble(), addresses[0].x!!.toDouble()))
+                    for(i in it.indices) {
+                        val markerPhar = Marker()
+                        markerPhar.apply {
+                            icon = OverlayImage.fromResource(R.drawable.ic_phar_marker)
+                            width= 100
+                            height = 100
+                            position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
+                            map = naverMap
+                        }
+                    }
 
             }
         }
+        viewModel.searchConv.observe(viewLifecycleOwner){ response->
+            val addresses: List<Addresse>? = response?.addresses
 
-        //viewModel.searchGeoInfo(args.roadNameAddr?:"")
+            addresses?.let {
+                for(i in it.indices) {
+                    val markerConv = Marker()
+                    markerConv.apply {
+                        icon = OverlayImage.fromResource(R.drawable.ic_conv_marker)
+                        width= 100
+                        height = 100
+                        position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
+                        map = naverMap
+                    }
+                }
+            }
+        }
+        viewModel.searchHosp.observe(viewLifecycleOwner){ response->
+            val addresses: List<Addresse>? = response?.addresses
+
+            addresses?.let { list ->
+                    for(i in list.indices) {
+                        val markerHosp = Marker()
+                        markerHosp.apply {
+                            icon = OverlayImage.fromResource(R.drawable.ic_hosp_marker)
+                            width= 100
+                            height = 100
+                            position = LatLng(list[i].y!!.toDouble(), list[i].x!!.toDouble())
+                            map = naverMap
+
+                        }
+
+                    }
+                list[0].x?.let{
+                    val cameraUpdate = CameraUpdate.scrollTo(LatLng(list[0].y!!.toDouble(), list[0].x!!.toDouble()))
+                    naverMap.moveCamera(cameraUpdate)
+                }
+
+                view?.invalidate()
+            }
+        }
+
+
 
 
     }

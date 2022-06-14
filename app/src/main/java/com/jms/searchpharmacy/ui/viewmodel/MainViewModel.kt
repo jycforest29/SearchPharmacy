@@ -22,17 +22,49 @@ class MainViewModel(
 
 
 
-    private val _searchResult = MutableLiveData<GeoInfo>()
-    val searchResult: LiveData<GeoInfo> get() = _searchResult
+    private val _searchPhar = MutableLiveData<GeoInfo>()
+    val searchPhar: LiveData<GeoInfo> get() = _searchPhar
 
 
-    fun searchGeoInfo(query: String) = viewModelScope.launch {
+    fun searchPharLoc(query: String) = viewModelScope.launch {
         val response = mainRepository.searchGeoInfo(query)
 
         if(response.isSuccessful) {
             response.body()?.let { body ->
                 if(body.meta?.totalCount!! > 0) {
-                    _searchResult.postValue(body)
+                    _searchPhar.postValue(body)
+                }
+            }
+        }
+    }
+
+    private val _searchConv = MutableLiveData<GeoInfo>()
+    val searchConv: LiveData<GeoInfo> get() = _searchConv
+
+
+    fun searchConvLoc(query: String) = viewModelScope.launch {
+        val response = mainRepository.searchGeoInfo(query)
+
+        if(response.isSuccessful) {
+            response.body()?.let { body ->
+                if(body.meta?.totalCount!! > 0) {
+                    _searchConv.postValue(body)
+                }
+            }
+        }
+    }
+
+    private val _searchHosp = MutableLiveData<GeoInfo>()
+    val searchHosp: LiveData<GeoInfo> get() = _searchHosp
+
+
+    fun searchHospLoc(query: String) = viewModelScope.launch {
+        val response = mainRepository.searchGeoInfo(query)
+
+        if(response.isSuccessful) {
+            response.body()?.let { body ->
+                if(body.meta?.totalCount!! > 0) {
+                    _searchHosp.postValue(body)
                 }
             }
         }
