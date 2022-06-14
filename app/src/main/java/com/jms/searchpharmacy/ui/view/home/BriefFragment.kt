@@ -13,9 +13,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jms.searchpharmacy.R
+import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefFieldNameBinding
+import com.jms.searchpharmacy.ui.view.MainActivity
+import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+import java.io.LineNumberReader
 
 
 private const val ITEM_FIELD_NAME = 0
@@ -27,22 +31,27 @@ class BriefFragment : Fragment() {
     private val binding get() = _binding!!
     private val args by navArgs<BriefFragmentArgs>()
 
-    private val list = listOf("","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370","서울 강남구 강남대로 370")
 
-    //private val
+    private val viewModel: MainViewModel by lazy {
+        (activity as MainActivity).mainViewModel
+    }
 
-    private inner class BriefAdapter()
+    private inner class BriefAdapter(val PLList: List<PharmacyLocation>)
         : RecyclerView.Adapter<BriefAdapter.BriefViewHolder>() {
 
-            inner class BriefViewHolder(view: View): RecyclerView.ViewHolder(view) {
+            inner class BriefViewHolder(val itemBinding: ItemInBriefBinding): RecyclerView.ViewHolder(itemBinding.root) {
 
 
-                fun bind(pl: String) {
-                    view?.findViewById<TextView>(R.id.roadNameAddr)?.let  {
-                        it.text = pl
+                fun bind(pl: PharmacyLocation) {
+                    itemBinding.apply {
+                        roadNameAddr.text = pl.load_address
+                        hospitalCnt.text = pl.hospital_count.toString()
+                        pharmacyCnt.text = pl.pharmacy_count.toString()
+                        ratio.text = pl.hospital_per_pharmacy.toString()
+                        convStoreCnt.text = pl.convenience_count.toString()
                     }
+
                     itemView.setOnClickListener{
-                        //Toast.makeText(requireContext(), "확인", Toast.LENGTH_SHORT).show()
                         val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail("서울 강남구 강남대로 370")
                         findNavController().navigate(action)
                     }
@@ -50,34 +59,23 @@ class BriefFragment : Fragment() {
                 }
             }
 
-        override fun getItemViewType(position: Int): Int {
-             return if(position == 0) ITEM_FIELD_NAME
-                 else ITEM_ROW
 
-        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BriefViewHolder {
-            return when(viewType) {
-                ITEM_FIELD_NAME -> {
-                    val binding = ItemInBriefFieldNameBinding.inflate(layoutInflater, parent, false)
-                    BriefViewHolder(binding.root)
-                }
-                else -> {
-                    val binding = ItemInBriefBinding.inflate(layoutInflater, parent, false)
-                    BriefViewHolder(binding.root)
-                }
-            }
+            val binding = ItemInBriefBinding.inflate(layoutInflater, parent, false)
+            return BriefViewHolder(binding)
+
         }
 
         override fun onBindViewHolder(holder: BriefAdapter.BriefViewHolder, position: Int) {
-            if(position != 0) {
-                holder.bind(list[position])
-                Log.d("TAG","몇번")
-            }
+
+            holder.bind(PLList[position])
+            Log.d("TAG","몇번")
+
 
         }
 
-        override fun getItemCount(): Int = list.size
+        override fun getItemCount(): Int = PLList.size
 
 
     }
@@ -96,15 +94,26 @@ class BriefFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.textInputEditText.setText(args.dongName)
 
-        binding.briefInfoRecyclerView.adapter = BriefAdapter()
-        binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        binding.briefInfoRecyclerView.adapter = BriefAdapter(listOf())
+//        binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
         binding.floatingActionButton.setOnClickListener{
 //            val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.roadNameAddr)
 //            findNavController().navigate(action)
         }
+        viewModel.fetchedPLs.observe(viewLifecycleOwner) {
 
+            //TODO{여기서 가져온게 null임 }
+            for(i in it.indices) {
+                Log.d("TAG","받아온정보: ${it[i].load_address}")
+            }
+
+            binding.briefInfoRecyclerView.adapter =BriefAdapter(it)
+            binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        viewModel.fetchPLs(args.dongName ?: "")
 
 
     }

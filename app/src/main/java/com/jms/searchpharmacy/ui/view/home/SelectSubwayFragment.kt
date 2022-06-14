@@ -166,7 +166,7 @@ class SelectSubwayFragment : Fragment() {
         }
     }
     private fun moveToDetailFragment(dongName: String) {
-        Log.d("TAG","$dongName")
+
         val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief(dongName)
         findNavController().navigate(action)
     }
@@ -184,7 +184,7 @@ class SelectSubwayFragment : Fragment() {
                 this.dongName = dongName
                 itemBinding.radioButton.text = this.dongName
                 itemBinding.radioButton.setOnClickListener {
-                    Log.d("TAG","확인")
+
                     moveToDetailFragment(dongName)
                     alertDialog.dismiss()
                 }
