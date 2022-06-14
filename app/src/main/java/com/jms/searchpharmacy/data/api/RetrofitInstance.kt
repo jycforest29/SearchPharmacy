@@ -1,6 +1,9 @@
 package com.jms.searchpharmacy.data.api
 
-import com.jms.searchpharmacy.util.Constants.BASE_URL
+import com.jms.searchpharmacy.data.api.server.ServerApi
+import com.jms.searchpharmacy.data.api.server.ServerApi.SERVER_BASE_URL
+
+import com.jms.searchpharmacy.util.Constants.NAVERMAP_BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -15,16 +18,21 @@ object RetrofitInstance {
             .build()
     }
 
-    private val retrofit: Retrofit by lazy {
-        Retrofit.Builder()
+    private fun buildRetrofit(base_url: String): Retrofit {
+        return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create())
             .client(okHttpClient)
-            .baseUrl(BASE_URL)
+            .baseUrl(base_url)
             .build()
-
     }
 
-    val api: NaverMapSearchApi by lazy {
-        retrofit.create(NaverMapSearchApi::class.java)
+
+    val naverMapApi: NaverMapSearchApi by lazy {
+        buildRetrofit(NAVERMAP_BASE_URL).create(NaverMapSearchApi::class.java)
+    }
+
+
+    val serverApi: ServerApi by lazy {
+        buildRetrofit(SERVER_BASE_URL).create(ServerApi::class.java)
     }
 }

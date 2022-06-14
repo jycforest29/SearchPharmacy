@@ -1,6 +1,10 @@
 package com.jms.searchpharmacy.data.model.server;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
+
 
 public class Station {
     @SerializedName("dong")
