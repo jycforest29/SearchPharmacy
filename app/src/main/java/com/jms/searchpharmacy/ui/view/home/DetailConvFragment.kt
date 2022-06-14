@@ -9,9 +9,6 @@ import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.databinding.FragmentDetailConvBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class DetailConvFragment : Fragment() {
@@ -32,11 +29,7 @@ class DetailConvFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.fetchedConvList.observe(viewLifecycleOwner) {
-            for(i in 0 until if(it.size > 5) 5 else it.size) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.searchHospLoc(it[i].address)
-                }
-            }
+
         }
     }
 
