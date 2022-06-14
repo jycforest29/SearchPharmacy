@@ -76,8 +76,19 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
+    private fun loadDetailList() {
+        viewModel.apply {
+            fetchConvList(args.primaryKey)
+            fetchHospList(args.primaryKey)
+            fetchPharList(args.primaryKey)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loadDetailList()
+
 
         binding.viewPager2WithMap.adapter = object: FragmentStateAdapter(this){
             override fun getItemCount(): Int = detailFragmentList.size
@@ -194,7 +205,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        viewModel.searchGeoInfo(args.roadNameAddr?:"")
+        //viewModel.searchGeoInfo(args.roadNameAddr?:"")
 
 
     }

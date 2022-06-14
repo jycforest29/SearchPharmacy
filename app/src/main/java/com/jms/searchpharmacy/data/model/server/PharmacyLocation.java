@@ -1,6 +1,9 @@
 package com.jms.searchpharmacy.data.model.server;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+
 
 public class PharmacyLocation {
     @SerializedName("index")

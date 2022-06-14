@@ -3,10 +3,8 @@ package com.jms.searchpharmacy.repository
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.data.api.RetrofitInstance.naverMapApi
 import com.jms.searchpharmacy.data.api.RetrofitInstance.serverApi
-import com.jms.searchpharmacy.data.model.server.Line
+import com.jms.searchpharmacy.data.model.server.*
 
-import com.jms.searchpharmacy.data.model.server.PharmacyLocation
-import com.jms.searchpharmacy.data.model.server.Station
 import retrofit2.Call
 import retrofit2.Response
 
@@ -32,9 +30,16 @@ class MainRepository {
         return serverApi.getPLList(dongName)
     }
 
-//    fun fetchPLs(dongName: String): Response<PL> {
-//        return serverApi.getPL(dongName)
-//    }
 
+    fun fetchConvList(primaryKey: Int): Call<List<Convenience>> {
+        return serverApi.getConvenienceList(primaryKey)
+    }
 
+    fun fetchHospList(primaryKey: Int): Call<List<Hospital>> {
+        return serverApi.getHospitalList(primaryKey)
+    }
+
+    fun fetchPharList(primaryKey: Int): Call<List<Pharmacy>> {
+        return serverApi.getPharmacyList(primaryKey)
+    }
 }

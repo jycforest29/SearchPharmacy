@@ -48,13 +48,11 @@ class BriefFragment : Fragment() {
                         hospitalCnt.text = pl.hospital_count.toString()
                         pharmacyCnt.text = pl.pharmacy_count.toString()
                         ratio.text = String.format("%.2f",pl.hospital_per_pharmacy)
-                                //pl.hospital_per_pharmacy.toString()
-
                         convStoreCnt.text = pl.convenience_count.toString()
                     }
 
                     itemView.setOnClickListener{
-                        val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail("서울 강남구 강남대로 370")
+                        val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.index)
                         findNavController().navigate(action)
                     }
 

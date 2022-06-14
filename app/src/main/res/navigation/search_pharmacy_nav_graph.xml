@@ -23,9 +23,8 @@
         android:name="com.jms.searchpharmacy.ui.view.home.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
-        <argument android:name="roadNameAddr"
-            app:argType="string"
-            app:nullable="true" />
+        <argument android:name="primaryKey"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/fragment_home"
