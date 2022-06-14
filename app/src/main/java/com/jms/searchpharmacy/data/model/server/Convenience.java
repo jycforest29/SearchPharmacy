@@ -3,7 +3,8 @@ package com.jms.searchpharmacy.data.model.server;
 import com.google.gson.annotations.SerializedName;
 
 public class Convenience {
-    @SerializedName("load_address")
+//    load_address -> loadaddress
+    @SerializedName("loadaddress")
     private String load_address;
     @SerializedName("name")
     private String name;

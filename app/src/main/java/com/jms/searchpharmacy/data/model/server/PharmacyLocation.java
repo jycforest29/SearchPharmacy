@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName;
 public class PharmacyLocation {
     @SerializedName("index")
     private int index;
-    @SerializedName("load_address")
+    //    load_address -> loadaddress
+    @SerializedName("loadaddress")
     private String load_address;
     @SerializedName("hospitalcount")
     private int hospital_count;
@@ -13,8 +14,9 @@ public class PharmacyLocation {
     private int pharmacy_count;
     @SerializedName("conveniencecount")
     private int convenience_count;
-    @SerializedName("startdate")
-    private String startdate;
+    //    추가
+    @SerializedName("doctorcount")
+    private int doctorcount;
     @SerializedName("dong")
     private String dong;
     @SerializedName("hospitalperpharmacy")
@@ -26,13 +28,13 @@ public class PharmacyLocation {
     @SerializedName("viewcount")
     private int viewcount;
 
-    public PharmacyLocation(int index, String load_address, int hospital_count, int pharmacy_count, int convenience_count, String startdate, String dong, float hospital_per_pharmacy, float doctor_per_pharmacy, float convenience_per_pharmacy, int viewcount) {
+    public PharmacyLocation(int index, String load_address, int hospital_count, int pharmacy_count, int convenience_count, int doctorcount, String dong, float hospital_per_pharmacy, float doctor_per_pharmacy, float convenience_per_pharmacy, int viewcount) {
         this.index = index;
         this.load_address = load_address;
         this.hospital_count = hospital_count;
         this.pharmacy_count = pharmacy_count;
         this.convenience_count = convenience_count;
-        this.startdate = startdate;
+        this.doctorcount = doctorcount;
         this.dong = dong;
         this.hospital_per_pharmacy = hospital_per_pharmacy;
         this.doctor_per_pharmacy = doctor_per_pharmacy;
@@ -80,12 +82,12 @@ public class PharmacyLocation {
         this.convenience_count = convenience_count;
     }
 
-    public String getStartdate() {
-        return startdate;
+    public int getDoctorcount() {
+        return doctorcount;
     }
 
-    public void setStartdate(String startdate) {
-        this.startdate = startdate;
+    public void setDoctorcount(int doctorcount) {
+        this.doctorcount = doctorcount;
     }
 
     public String getDong() {

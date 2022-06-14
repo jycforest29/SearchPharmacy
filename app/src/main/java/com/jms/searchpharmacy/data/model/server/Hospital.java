@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Hospital {
     @SerializedName("loadaddress")
-    private String loadaddress;
+    private String load_address;
     @SerializedName("name")
     private String name;
     @SerializedName("type")
@@ -14,23 +14,23 @@ public class Hospital {
     @SerializedName("startdate")
     private String startdate;
     @SerializedName("totaldoctor")
-    private Integer totaldoctor;
+    private Integer total_doctor;
 
-    public Hospital(String loadaddress, String name, String type, String address, String startdate, Integer totaldoctor) {
-        this.loadaddress = loadaddress;
+    public Hospital(String load_address, String name, String type, String address, String startdate, Integer total_doctor) {
+        this.load_address = load_address;
         this.name = name;
         this.type = type;
         this.address = address;
         this.startdate = startdate;
-        this.totaldoctor = totaldoctor;
+        this.total_doctor = total_doctor;
     }
 
-    public String getLoadAddress() {
-        return loadaddress;
+    public String getLoad_address() {
+        return load_address;
     }
 
-    public void setLoadAddress(String loadaddress) {
-        this.loadaddress = loadaddress;
+    public void setLoad_address(String load_address) {
+        this.load_address = load_address;
     }
 
     public String getName() {
@@ -57,19 +57,19 @@ public class Hospital {
         this.address = address;
     }
 
-    public String getStartDate() {
+    public String getStartdate() {
         return startdate;
     }
 
-    public void setStartDate(String startdate) {
+    public void setStartdate(String startdate) {
         this.startdate = startdate;
     }
 
-    public Integer getTotalDoctor() {
-        return totaldoctor;
+    public Integer getTotal_doctor() {
+        return total_doctor;
     }
 
-    public void setTotalDoctor(Integer totaldoctor) {
-        this.totaldoctor = totaldoctor;
+    public void setTotal_doctor(Integer total_doctor) {
+        this.total_doctor = total_doctor;
     }
 }

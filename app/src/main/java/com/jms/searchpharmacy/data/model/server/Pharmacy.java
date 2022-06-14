@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Pharmacy {
     @SerializedName("loadaddress")
-    private String loadaddress;
+    private String load_address;
     @SerializedName("name")
     private String name;
     @SerializedName("address")
@@ -12,19 +12,19 @@ public class Pharmacy {
     @SerializedName("startdate")
     private String startdate;
 
-    public Pharmacy(String loadaddress, String name, String address, String startdate) {
-        this.loadaddress = loadaddress;
+    public Pharmacy(String load_address, String name, String address, String startdate) {
+        this.load_address = load_address;
         this.name = name;
         this.address = address;
         this.startdate = startdate;
     }
 
-    public String getLoadAddress() {
-        return loadaddress;
+    public String getLoad_address() {
+        return load_address;
     }
 
-    public void setLoadAddress(String loadaddress) {
-        this.loadaddress = loadaddress;
+    public void setLoad_address(String load_address) {
+        this.load_address = load_address;
     }
 
     public String getName() {
@@ -43,11 +43,11 @@ public class Pharmacy {
         this.address = address;
     }
 
-    public String getStartDate() {
+    public String getStartdate() {
         return startdate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartdate(String startdate) {
         this.startdate = startdate;
     }
 }
