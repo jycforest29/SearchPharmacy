@@ -14,6 +14,9 @@ import com.jms.searchpharmacy.databinding.ItemDetailHospBinding
 
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class DetailHospFragment : Fragment() {
     private var _binding : FragmentDetailHospBinding? = null
@@ -70,6 +73,12 @@ class DetailHospFragment : Fragment() {
         viewModel.fetchedHospList.observe(viewLifecycleOwner) {
             binding.hospRv.adapter = DetailHospAdapter(it)
             binding.hospRv.layoutManager = LinearLayoutManager(requireContext())
+
+            for(i in 0 until if(it.size > 5) 5 else it.size) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.searchHospLoc(it[i].address)
+                }
+            }
         }
 
     }

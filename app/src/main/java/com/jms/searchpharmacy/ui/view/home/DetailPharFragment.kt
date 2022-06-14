@@ -15,6 +15,9 @@ import com.jms.searchpharmacy.databinding.ItemDetailHospBinding
 import com.jms.searchpharmacy.databinding.ItemDetailPharBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class DetailPharFragment : Fragment() {
@@ -23,6 +26,8 @@ class DetailPharFragment : Fragment() {
     private val viewModel : MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
+
+
     private inner class DetailPharAdapter(val pharList: List<Pharmacy>)
         : RecyclerView.Adapter<DetailPharAdapter.DetailPharViewHolder>() {
 
@@ -31,9 +36,7 @@ class DetailPharFragment : Fragment() {
 
             fun bind(phar: Pharmacy){
                 itemBinding.apply {
-                    pharName.text = phar.name
-                    pharAddr.text = phar.address
-                    pharDate.text = phar.startdate
+
                 }
             }
 
@@ -64,9 +67,16 @@ class DetailPharFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.fetchedPharList.observe(viewLifecycleOwner) {
             binding.pharRv.adapter = DetailPharAdapter(it)
             binding.pharRv.layoutManager = LinearLayoutManager(requireContext())
+
+            for(i in 0 until if(it.size > 5) 5 else it.size) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.searchPharLoc(it[i].address)
+                }
+            }
         }
     }
 
