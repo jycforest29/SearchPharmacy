@@ -35,7 +35,7 @@
     <td>Hospital</td>
     <td>int index(pk)<br>String name<br>String type<br>String address<br>String loadaddress<br>String startdate<br>int totalDoctor</td>
     <td></td>
-    <td>1-9호선, 경춘선, 공항철도, 김포도시철도, 수인분당선, 신분당선, 우이신설경전철만 사용</td>
+    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출</td>
     <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<br> 우편번호 DB(우체국)<br>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)</td>
   </tr>
   <tr>
