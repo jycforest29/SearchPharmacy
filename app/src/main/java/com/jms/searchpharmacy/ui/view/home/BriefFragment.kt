@@ -13,10 +13,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jms.searchpharmacy.R
-
 import com.jms.searchpharmacy.databinding.FragmentBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefFieldNameBinding
+
 
 private const val ITEM_FIELD_NAME = 0
 private const val ITEM_ROW = 1
@@ -93,7 +93,7 @@ class BriefFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textInputEditText.setText(args.stationName)
+        binding.textInputEditText.setText(args.dongName)
 
         binding.briefInfoRecyclerView.adapter = BriefAdapter()
         binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -103,7 +103,7 @@ class BriefFragment : Fragment() {
 //            val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.roadNameAddr)
 //            findNavController().navigate(action)
         }
-        convertToDongName(args.stationName)
+        convertToDongName(args.dongName)
     }
 
     override fun onDestroyView() {

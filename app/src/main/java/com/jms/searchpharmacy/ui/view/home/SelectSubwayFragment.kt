@@ -1,9 +1,14 @@
 package com.jms.searchpharmacy.ui.view.home
 
 
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -11,19 +16,19 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.api.RetrofitInstance.serverApi
 
 import com.jms.searchpharmacy.data.model.server.Line
 import com.jms.searchpharmacy.data.model.server.Station
-import com.jms.searchpharmacy.databinding.FragmentSelectSubwayBinding
-import com.jms.searchpharmacy.databinding.ItemInDetailSubwayBinding
-import com.jms.searchpharmacy.databinding.ItemInSelectSubwayBinding
+import com.jms.searchpharmacy.databinding.*
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,6 +43,9 @@ class SelectSubwayFragment : Fragment() {
     private val viewModel : MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
+    //private var selectedDongName: String? = null
+
+    private lateinit var alertDialog: AlertDialog
 
     private inner class DetailNameAdapter(private var stationList: List<Station>)
         : RecyclerView.Adapter<DetailNameAdapter.DetailNameViewHolder>() {
@@ -53,9 +61,9 @@ class SelectSubwayFragment : Fragment() {
                     itemInDetailSubwayBinding.stationNameText.text = station.name //호선 이름
                     itemInDetailSubwayBinding.stationNameText.setOnClickListener {
                         getDongByStation(station.name)
-                        station.dong
-                        val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief("흑석동")
-                        findNavController().navigate(action)
+
+//                        val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief("흑석동")
+//                        findNavController().navigate(action)
                     }
                 }
             }
@@ -83,7 +91,65 @@ class SelectSubwayFragment : Fragment() {
                 ) {
                     if(response.isSuccessful) {
                         response.body()?.let {
-                            // 다이얼로그로 보내기
+
+                            if(it.size > 1) {
+                                // 다이얼로그로 보내기
+                                val dialogBinding = DialogSelectDongBinding.inflate(layoutInflater)
+
+
+
+
+                                alertDialog =
+                                    AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
+                                        .setView(dialogBinding.root)
+                                        .create()
+
+                                dialogBinding.apply {
+                                    dialogRv.adapter = DialogAdapter(it)
+                                    dialogRv.layoutManager =
+                                        LinearLayoutManager(requireContext())
+                                    dialogRv.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
+                                        override fun onInterceptTouchEvent(
+                                            rv: RecyclerView,
+                                            e: MotionEvent
+                                        ): Boolean {
+                                            return false
+                                        }
+
+                                        override fun onTouchEvent(
+                                            rv: RecyclerView,
+                                            e: MotionEvent
+                                        ) {
+                                            when(e.action){
+                                                MotionEvent.ACTION_BUTTON_PRESS -> {
+                                                    alertDialog.dismiss()
+
+                                                }
+                                                else->{}
+                                            }
+                                        }
+
+                                        override fun onRequestDisallowInterceptTouchEvent(
+                                            disallowIntercept: Boolean
+                                        ) {
+
+                                        }
+
+                                    })
+                                    closeDialogBtn.setOnClickListener {
+                                        //다이얼로그 닫기
+                                        alertDialog.dismiss()
+                                    }
+
+                                }
+
+                                //뒷배경 투명하게
+                                alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                alertDialog.show()
+                            } else {
+                                val dongName = it[0].dong
+                                moveToDetailFragment(dongName)
+                            }
                         }
                     }
 
@@ -98,6 +164,45 @@ class SelectSubwayFragment : Fragment() {
                 }
             })
         }
+    }
+    private fun moveToDetailFragment(dongName: String) {
+        Log.d("TAG","$dongName")
+        val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief(dongName)
+        findNavController().navigate(action)
+    }
+
+
+
+
+    private inner class DialogAdapter(val stationList: List<Station>): RecyclerView.Adapter<DialogAdapter.DialogViewHolder>(){
+
+        inner class DialogViewHolder(val itemBinding: DialogItemSelectDongBinding): RecyclerView.ViewHolder(itemBinding.root) {
+            lateinit var dongName: String
+
+
+            fun bind(dongName: String){
+                this.dongName = dongName
+                itemBinding.radioButton.text = this.dongName
+                itemBinding.radioButton.setOnClickListener {
+                    Log.d("TAG","확인")
+                    moveToDetailFragment(dongName)
+                    alertDialog.dismiss()
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DialogAdapter.DialogViewHolder {
+            val binding = DialogItemSelectDongBinding.inflate(layoutInflater, parent, false)
+            return DialogViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: DialogViewHolder, position: Int) {
+            val station = stationList[position]
+            holder.bind(station.dong)
+
+        }
+
+        override fun getItemCount(): Int = stationList.size
     }
 
     private inner class BriefNameAdapter(private val lineList: List<Line>)

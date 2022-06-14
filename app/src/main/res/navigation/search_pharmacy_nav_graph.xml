@@ -14,7 +14,7 @@
             android:id="@+id/action_fragment_brief_to_fragment_detail"
             app:destination="@id/fragment_detail" />
         <argument
-            android:name="stationName"
+            android:name="dongName"
             app:argType="string"
             app:nullable="true" />
     </fragment>
