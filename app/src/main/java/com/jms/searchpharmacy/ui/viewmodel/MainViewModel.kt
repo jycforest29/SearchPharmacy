@@ -1,5 +1,6 @@
 package com.jms.searchpharmacy.ui.viewmodel
 
+import android.accounts.NetworkErrorException
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -60,25 +61,27 @@ class MainViewModel(
         })
     }
 
-    private val _fetchedStations = MutableLiveData<List<Station>>()
-    val fetchedStations: LiveData<List<Station>> get() = _fetchedStations
+    //private val _fetchedStations = MutableLiveData<List<Station>>()
+    //val fetchedStations: LiveData<List<Station>> get() = _fetchedStations
 
-    fun fetchStations(line_name: String) = viewModelScope.launch {
-        val call = mainRepository.fetchStations(line_name)
-
-        call.enqueue(object: Callback<List<Station>> {
-            override fun onResponse(call: Call<List<Station>>, response: Response<List<Station>>) {
-                response.body()?.let{
-                    _fetchedStations.postValue(it)
-                }
-            }
-
-            override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-                Log.d("TAG","List<Line> Callback.onFailure called")
-            }
-
-        })
-    }
+//    var fetchedStations: List<Station> = listOf()
+//    fun fetchStations(line_name: String): List<Station>? = viewModelScope.launch {
+//        val call = mainRepository.fetchStations(line_name)
+//
+//        return call.enqueue(object: Callback<List<Station>> {
+//            override fun onResponse(call: Call<List<Station>>, response: Response<List<Station>>) {
+//                response.body()?.let{
+//                   it
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<Station>>, t: Throwable) {
+//                Log.d("TAG","List<Line> Callback.onFailure called")
+//                    null
+//            }
+//
+//        })
+//    }
 
 
 

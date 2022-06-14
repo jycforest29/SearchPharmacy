@@ -1,9 +1,10 @@
 package com.jms.searchpharmacy.data.api
 
 import com.jms.searchpharmacy.data.api.server.ServerApi
-import com.jms.searchpharmacy.data.api.server.ServerApi.SERVER_BASE_URL
+
 
 import com.jms.searchpharmacy.util.Constants.NAVERMAP_BASE_URL
+import com.jms.searchpharmacy.util.Constants.SERVER_BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

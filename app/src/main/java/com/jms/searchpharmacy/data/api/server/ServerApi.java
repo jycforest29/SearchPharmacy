@@ -14,9 +14,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface ServerApi {
-    //String IP = "10.210.96.11:8000";
-    String IP = "ca49-219-255-207-96.jp.ngrok.io";
-    String SERVER_BASE_URL = "http://"+IP+"/api/pharmacy/";
 
     @GET("getLines/")
     Call<List<Line>> getLines();
