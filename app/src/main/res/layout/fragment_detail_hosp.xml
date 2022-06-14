@@ -20,14 +20,15 @@
             android:textColor="@color/white"
             android:text="병원명"
             />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:padding="5dp"
-            android:textColor="@color/white"
             android:text="분류"
-            />
+            android:textColor="@color/white" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_weight="6"

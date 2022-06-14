@@ -11,6 +11,7 @@ import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.model.server.Hospital
 import com.jms.searchpharmacy.databinding.FragmentDetailHospBinding
 import com.jms.searchpharmacy.databinding.ItemDetailHospBinding
+
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 

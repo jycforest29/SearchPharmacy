@@ -5,8 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jms.searchpharmacy.R
+import com.jms.searchpharmacy.data.model.server.Hospital
+import com.jms.searchpharmacy.data.model.server.Pharmacy
 import com.jms.searchpharmacy.databinding.FragmentDetailPharBinding
+import com.jms.searchpharmacy.databinding.ItemDetailHospBinding
+import com.jms.searchpharmacy.databinding.ItemDetailPharBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 
@@ -16,6 +22,36 @@ class DetailPharFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel : MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
+    }
+    private inner class DetailPharAdapter(val pharList: List<Pharmacy>)
+        : RecyclerView.Adapter<DetailPharAdapter.DetailPharViewHolder>() {
+
+        inner class DetailPharViewHolder(val itemBinding: ItemDetailPharBinding)
+            : RecyclerView.ViewHolder(itemBinding.root) {
+
+            fun bind(phar: Pharmacy){
+                itemBinding.apply {
+                    pharName.text = phar.name
+                    pharAddr.text = phar.address
+                    pharDate.text = phar.startdate
+                }
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailPharViewHolder {
+            val itemBinding = ItemDetailPharBinding.inflate(layoutInflater, parent, false)
+            return DetailPharViewHolder(itemBinding)
+        }
+
+        override fun onBindViewHolder(holder: DetailPharViewHolder, position: Int) {
+            val phar = pharList[position]
+            holder.bind(phar)
+        }
+
+        override fun getItemCount(): Int = pharList.size
+
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +64,9 @@ class DetailPharFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.fetchedPharList.observe(viewLifecycleOwner) {
-
+            binding.pharRv.adapter = DetailPharAdapter(it)
+            binding.pharRv.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
