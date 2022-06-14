@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jms.searchpharmacy.data.api.server.RetrofitClient
+import com.jms.searchpharmacy.data.api.RetrofitInstance.serverApi
+
 import com.jms.searchpharmacy.data.model.server.Line
 import com.jms.searchpharmacy.data.model.server.Station
 import com.jms.searchpharmacy.databinding.FragmentSelectSubwayBinding
@@ -49,9 +50,10 @@ class SelectSubwayFragment : Fragment() {
             fun bind(station: Station) {
                 // 역이름 받아서 배치
                 itemView.apply {
-                    itemInDetailSubwayBinding.stationNameText.text = station.getName()
+                    itemInDetailSubwayBinding.stationNameText.text = station.name //호선 이름
                     itemInDetailSubwayBinding.stationNameText.setOnClickListener {
-                        getDongByStation(station.getName())
+                        getDongByStation(station.name)
+                        station.dong
                         val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief("흑석동")
                         findNavController().navigate(action)
                     }
@@ -73,7 +75,7 @@ class SelectSubwayFragment : Fragment() {
         override fun getItemCount(): Int = stationList.size
 
         private fun getDongByStation(station_name: String) {
-            val call = RetrofitClient.getInstance().serverApi.getDongByStation(station_name)
+            val call = serverApi.getDongByStation(station_name)
             call.enqueue(object : Callback<List<Station>> {
                 override fun onResponse(
                     call: Call<List<Station>>,
@@ -108,46 +110,50 @@ class SelectSubwayFragment : Fragment() {
                 toggleButton.observe(viewLifecycleOwner){ isClicked ->
                     if(isClicked) {
                         itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = true
-                        getStationsByLine(line.getName())
+                        //getStationsByLine(line.getName())
+                        viewModel.fetchStations(line.name)
                     } else {
                         itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = false
                     }
                 }
+                viewModel.fetchedStations.observe(viewLifecycleOwner){
+                    itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(it)
+                    itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
+                }
+
             }
-            private
-
-            fun getStationsByLine(line_name: String) {
-                val call = RetrofitClient.getInstance().serverApi.getStationByLine(line_name)
-                call.enqueue(object : Callback<List<Station>> {
-                    override fun onResponse(
-                        call: Call<List<Station>>,
-                        response: Response<List<Station>>
-                    ) {
-                        val stationResponse = response.body()!!
-                        var stationList = stationResponse
-                        itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(stationList)
-                        itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
-                        itemInSelectSubwayBinding.detailOfLineRecyclerView.addItemDecoration(
-                            DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL)
-                        )
-
-                    }
-
-                    override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-                        Toast.makeText(
-                            requireContext(),
-                            "An error has occured",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                })
-            }
+//            private fun getStationsByLine1(line_name: String) {
+//                val call = serverApi.getStationByLine(line_name)
+//                call.enqueue(object : Callback<List<Station>> {
+//                    override fun onResponse(
+//                        call: Call<List<Station>>,
+//                        response: Response<List<Station>>
+//                    ) {
+//                        val stationResponse = response.body()!!
+//                        var stationList = stationResponse
+//                        itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(stationList)
+//                        itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
+//                        itemInSelectSubwayBinding.detailOfLineRecyclerView.addItemDecoration(
+//                            DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL)
+//                        )
+//
+//                    }
+//
+//                    override fun onFailure(call: Call<List<Station>>, t: Throwable) {
+//                        Toast.makeText(
+//                            requireContext(),
+//                            "An error has occured",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    }
+//                })
+//            }
 
             fun bind(line: Line) {
                 this.line = line
 
 //                    itemInSelectSubwayBinding.colorOfLine.circleBackgroundColor = Color.parseColor(line.color)
-                itemInSelectSubwayBinding.lineNumberText.text = line.getName()
+                itemInSelectSubwayBinding.lineNumberText.text = line.name
                 itemInSelectSubwayBinding.lineNumberLayout.setOnClickListener {
                     toggleButton.postValue(!toggleButton.value!!)
                 }
@@ -180,25 +186,35 @@ class SelectSubwayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getLines()
+
+        viewModel.fetchLines()
+
+        viewModel.fetchedLines.observe(viewLifecycleOwner) {
+            lineList = it
+            binding.allLinesRecyclerView.adapter = BriefNameAdapter(lineList)
+            binding.allLinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
+
     }
 
-    private fun getLines() {
-        val call: Call<List<Line>> = RetrofitClient.getInstance().getServerApi().getLines()
-        call.enqueue(object : Callback<List<Line>> {
-            override fun onResponse(call: Call<List<Line>>, response: Response<List<Line>>) {
-                val lineResponse = response.body()!!
-                lineList = lineResponse
-                binding.allLinesRecyclerView.adapter = BriefNameAdapter(lineList)
-                binding.allLinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            }
 
-            override fun onFailure(call: Call<List<Line>>, t: Throwable) {
-                Toast.makeText(requireContext(), "An error has occured", Toast.LENGTH_LONG)
-                    .show()
-            }
-        })
-    }
+//    private fun getLines1() {
+//
+//        val call: Call<List<Line>> = serverApi.getLines()
+//        call.enqueue(object : Callback<List<Line>> {
+//            override fun onResponse(call: Call<List<Line>>, response: Response<List<Line>>) {
+//                val lineResponse = response.body()!!
+//                lineList = lineResponse
+//                binding.allLinesRecyclerView.adapter = BriefNameAdapter(lineList)
+//                binding.allLinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//            }
+//
+//            override fun onFailure(call: Call<List<Line>>, t: Throwable) {
+//                Toast.makeText(requireContext(), "An error has occured", Toast.LENGTH_LONG)
+//                    .show()
+//            }
+//        })
+//    }
 
     override fun onDestroyView() {
         _binding = null

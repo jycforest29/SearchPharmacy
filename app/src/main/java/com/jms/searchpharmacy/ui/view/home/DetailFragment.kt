@@ -1,12 +1,15 @@
 package com.jms.searchpharmacy.ui.view.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -18,6 +21,9 @@ import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.MarkerIcons
 
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
@@ -31,9 +37,19 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         (activity as MainActivity).mainViewModel
     }
 
+
+    private val latLngLiveData: MutableLiveData<LatLng> = MutableLiveData()
     private val detailFragmentList = arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
 
-    private var isExpanded : Boolean = true
+    private val isExpandedLiveData : MutableLiveData<Boolean> = MutableLiveData(true)
+
+    private val markerPharListLiveData: MutableLiveData<List<Marker>> = MutableLiveData()
+    private val markerHopsListLiveData: MutableLiveData<List<Marker>> = MutableLiveData()
+    private val markerConvListLiveData: MutableLiveData<List<Marker>> = MutableLiveData()
+
+
+
+    private lateinit var naverMap: NaverMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,10 +59,13 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         // Inflate the layout for this fragment
 
         activity?.let {
-            val fm = it.supportFragmentManager
+            val fm = childFragmentManager
             val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
                 ?: MapFragment.newInstance().also {
-                    fm.beginTransaction().add(R.id.map, it).commit()
+                    fm.beginTransaction()
+                        .add(R.id.map, it)
+                        .addToBackStack(null)
+                        .commit()
                 }
             mapFragment.getMapAsync(this)
 
@@ -85,27 +104,93 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         }.attach()
 
         binding.toggleButton.setOnClickListener {
-            isExpanded = !isExpanded
-            binding.viewPager2WithMap.isVisible = isExpanded
-            if(isExpanded) {
+            isExpandedLiveData.postValue(!isExpandedLiveData.value!!)
+            //isExpanded = !isExpanded
+
+        }
+    }
+
+    private fun requestMarkerInfo() {
+        //여기서 마커리스트 만들어서 처리
+        //TODO{마커리스트}
+        //약국 마커
+        /*
+        val markerPhar = Marker()
+        markerPhar.apply {
+            icon = OverlayImage.fromResource(R.drawable.ic_phar_marker)
+            width= 100
+            height = 100
+            position = it
+            map = naverMap
+        }
+
+        //병원 마커
+        val markerHosp = Marker()
+        markerHosp.apply {
+            icon = OverlayImage.fromResource(R.drawable.ic_hosp_marker)
+            width= 100
+            height = 100
+            position = it
+            map = naverMap
+        }
+
+        //편의점 마커
+        val markerConv = Marker()
+        markerHosp.apply {
+            icon = OverlayImage.fromResource(R.drawable.ic_conv_marker)
+            width= 100
+            height = 100
+            position = it
+            map = naverMap
+        }
+
+         */
+
+    }
+
+    private fun setupUISettings() {
+
+        // 옵저버
+        latLngLiveData.observe(viewLifecycleOwner){
+            val cameraUpdate = CameraUpdate.scrollTo(it)
+
+            this.naverMap.moveCamera(cameraUpdate)
+
+
+            //마커정보 요청하면
+            requestMarkerInfo()
+            //TODO{마커 정보 요청청}
+
+        }
+
+        isExpandedLiveData.observe(viewLifecycleOwner) {
+            binding.viewPager2WithMap.isVisible = it
+            if(it) {
+
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
+                naverMap.setContentPadding(0,0,0,binding.contentLayoutInDetail.height)
             } else {
+
+
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_add)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
+                naverMap.setContentPadding(0,0,0,0)
             }
         }
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        setupUISettings()
+
         viewModel.searchResult.observe(viewLifecycleOwner){ response->
             val addresses: List<Addresse>? = response?.addresses
-            Toast.makeText(requireContext(), "${addresses?.get(0)?.roadAddress}", Toast.LENGTH_SHORT).show()
 
             addresses?.let {
-                val cameraUpdate = CameraUpdate.scrollTo(LatLng(addresses[0].y!!.toDouble(), addresses[0].x!!.toDouble()))
-                    .animate(CameraAnimation.Fly)
-                naverMap.moveCamera(cameraUpdate)
+
+                latLngLiveData.postValue(LatLng(addresses[0].y!!.toDouble(), addresses[0].x!!.toDouble()))
+
             }
         }
 
@@ -116,6 +201,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onDestroyView() {
         _binding = null
+
         super.onDestroyView()
     }
 

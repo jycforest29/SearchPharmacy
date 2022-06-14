@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jms.searchpharmacy.R
-import com.jms.searchpharmacy.data.model.stations.PharmacyLocation
+
 import com.jms.searchpharmacy.databinding.FragmentBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefFieldNameBinding

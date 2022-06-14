@@ -8,7 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.databinding.ActivityMainBinding
-import com.jms.searchpharmacy.repository.NaverMapSearchRepository
+import com.jms.searchpharmacy.repository.MainRepository
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModelFactory
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
     val mainViewModel: MainViewModel by lazy {
-        val naverMapSearchRepository = NaverMapSearchRepository()
+        val naverMapSearchRepository = MainRepository()
         val factory = MainViewModelFactory(naverMapSearchRepository)
         ViewModelProvider(this, factory)[MainViewModel::class.java]
 
