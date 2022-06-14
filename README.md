@@ -1,5 +1,66 @@
 # SearchPharmacy
 # 모델별 사용한 데이터 및 데이터 전처리 기준
+<table>
+  <tr>
+    <th>모델명</th>
+    <th>필드</th>
+    <th>임의처리</th>
+    <th>특이사항</th>
+    <th>사용 DB 및 출처</th>
+  </tr>
+  <tr>
+    <td>Line</td>
+    <td>String name(pk)</td>
+    <td></td>
+    <td>1-9호선, 경춘선, 공항철도, 김포도시철도, 수인분당선, 신분당선, 우이신설경전철만 사용</td>
+    <td>서울교통공사 노선별 지하철역 정보(서울 열린데이터 광장)<br> 우편번호 DB(우체국)</td>
+  </tr>
+  <tr>
+    <td>Station</td>
+    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
+    <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
+    <td>동일</td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <th>모델명</th>
+    <th>필드</th>
+    <th>임의처리</th>
+    <th>특이사항</th>
+    <th>사용 DB 및 출처</th>
+  </tr>
+  <tr>
+    <td>Hospital</td>
+    <td>String name(pk)</td>
+    <td></td>
+    <td>1-9호선, 경춘선, 공항철도, 김포도시철도, 수인분당선, 신분당선, 우이신설경전철만 사용</td>
+    <td>서울교통공사 노선별 지하철역 정보(서울 열린데이터 광장)<br> 우편번호 DB(우체국)</td>
+  </tr>
+  <tr>
+    <td>Pharmacy</td>
+    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
+    <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
+    <td>동일</td>
+  </tr>
+  <tr>
+    <td>Convenience</td>
+    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
+    <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
+    <td>동일</td>
+  </tr>
+  <tr>
+    <td>PharmacyLocation</td>
+    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
+    <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
+    <td>동일</td>
+  </tr>
+</table>
+
 # api 명세서
 <table>
   <tr>
@@ -47,7 +108,7 @@
   <tr>
     <td>detail/{int:index}/</td>
     <td>get</td>
-    <td>동 검색결과로 나온 PL 클릭시 디테일 화면에 PL 정보 제공</td>
+    <td>동 검색결과로 나온 PL 클릭시 해당 PL의 pk에 따라 디테일 화면에 PL 정보 제공</td>
     <td>PharmacyLocation</ttdh>
     <td>all fields</td>
   </tr>
