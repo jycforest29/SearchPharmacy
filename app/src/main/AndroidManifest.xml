@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SearchPharmacy"
+        android:usesCleartextTraffic="true"
         >
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -26,5 +27,7 @@
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<!--    server-->
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
