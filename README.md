@@ -42,41 +42,41 @@
     <td>get</td>
     <td>동 검색시 해당 동에 속하는 PL 정보 제공</td>
     <td>PharmacyLocation</td>
-    <td>loadaddress,hospitalcount, doctorcount, pharmacycount,dong, hospitalperpharmacy,doctorperpharmacy,index,viewcount',conveniencecount, convenienceperpharmacy</td>
+    <td>all fields</td>
   </tr>
   <tr>
     <td>detail/{int:index}/</td>
     <td>get</td>
     <td>동 검색결과로 나온 PL 클릭시 디테일 화면에 PL 정보 제공</td>
     <td>PharmacyLocation</ttdh>
-    <td>loadaddress,hospitalcount, doctorcount, pharmacycount,dong, hospitalperpharmacy,doctorperpharmacy,index,viewcount',conveniencecount, convenienceperpharmacy</td>
+    <td>all fields</td>
   </tr>
   <tr>
     <td>detail/{int:index}/hospital/</td>
     <td>get</td>
     <td>PL의 디테일 화면에서 병원 탭 클릭시 PL의 도로명주소에 속하는 모든 병원 정보 제공 </td>
     <td>Hospital</td>
-    <td>loadaddress, name, type, address, startdate, totaldoctor</td>
+    <td>loadaddress<br>name<br>type<br>address<br>startdate<br>totaldoctor</td>
   </tr>
   <tr>
     <td>detail/{int:index}/pharmacy/</td>
     <td>get</td>
     <td>PL의 디테일 화면에서 약국 탭 클릭시 PL의 도로명주소에 속하는 모든 약국 정보 제공 </td>
     <td>Pharmacy</td>
-    <td>loadaddress, name, address, startdate</td>
+    <td>loadaddress<br>name<br>address<br>startdate</td>
   </tr>
    <tr>
     <td>detail/{int:index}/convenience/</td>
     <td>get</td>
     <td>PL의 디테일 화면에서 편의점 탭 클릭시 PL의 도로명주소에 속하는 모든 편의점 정보 제공 </td>
     <td>Convenience</td>
-    <td>loadaddress, name, address, startdate</td>
+    <td>loadaddress<br>name<br>address<br>startdate</td>
   </tr>
   <tr>
     <td>getTop5/</td>
     <td>get</td>
     <td>PL의 viewcount값이 5개 이상인 객체 중 높은순으로 5개 뽑아 정보 </td>
     <td>PharmacyLocation</td>
-    <td>loadaddress,hospitalcount, doctorcount, pharmacycount,dong, hospitalperpharmacy,doctorperpharmacy,index,viewcount',conveniencecount, convenienceperpharmacy</td>
+    <td>all fields</td>
   </tr>
 </table>
