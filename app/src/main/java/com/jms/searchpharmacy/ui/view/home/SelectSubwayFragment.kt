@@ -39,10 +39,10 @@ class SelectSubwayFragment : Fragment() {
         (activity as MainActivity).mainViewModel
     }
 
-    private inner class DetailNameAdapter(stationList: List<Station>)
+    private inner class DetailNameAdapter(private var stationList: List<Station>)
         : RecyclerView.Adapter<DetailNameAdapter.DetailNameViewHolder>() {
 
-        private var stationList: List<Station> = stationList
+        //private var stationList: List<Station> = stationList
 
         inner class DetailNameViewHolder(val itemInDetailSubwayBinding: ItemInDetailSubwayBinding)
             : RecyclerView.ViewHolder(itemInDetailSubwayBinding.root) {
@@ -81,7 +81,12 @@ class SelectSubwayFragment : Fragment() {
                     call: Call<List<Station>>,
                     response: Response<List<Station>>
                 ) {
-                    val dongResponse = response.body()!!
+                    if(response.isSuccessful) {
+                        response.body()?.let {
+                            // 다이얼로그로 보내기
+                        }
+                    }
+
                 }
 
                 override fun onFailure(call: Call<List<Station>>, t: Throwable) {
@@ -95,31 +100,27 @@ class SelectSubwayFragment : Fragment() {
         }
     }
 
-    private inner class BriefNameAdapter(lineList: List<Line>)
+    private inner class BriefNameAdapter(private val lineList: List<Line>)
         : RecyclerView.Adapter<BriefNameAdapter.BriefNameViewHolder>() {
 
-        private val lineList: List<Line> = lineList
+        //private val lineList: List<Line> = lineList
 
         inner class BriefNameViewHolder(val itemInSelectSubwayBinding: ItemInSelectSubwayBinding)
             : RecyclerView.ViewHolder(itemInSelectSubwayBinding.root) {
             //여기서 어답터 지정
             val toggleButton: MutableLiveData<Boolean> = MutableLiveData(false)
             lateinit var line: Line
+            lateinit var stationList: List<Station>
 
             init {
+
                 toggleButton.observe(viewLifecycleOwner){ isClicked ->
-                    if(isClicked) {
-                        itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = true
-                        //getStationsByLine(line.getName())
-                        viewModel.fetchStations(line.name)
-                    } else {
-                        itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = false
-                    }
+                    itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = isClicked
                 }
-                viewModel.fetchedStations.observe(viewLifecycleOwner){
-                    itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(it)
-                    itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
-                }
+
+//                viewModel.fetchedStations.observe(viewLifecycleOwner){
+//                    stationList = it
+//                }
 
             }
 //            private fun getStationsByLine1(line_name: String) {
@@ -157,6 +158,34 @@ class SelectSubwayFragment : Fragment() {
                 itemInSelectSubwayBinding.lineNumberLayout.setOnClickListener {
                     toggleButton.postValue(!toggleButton.value!!)
                 }
+                setupStationList(line.name)
+
+
+            }
+
+            fun setupStationList(line_name: String) {
+                val call = serverApi.getStationByLine(line.name)
+                call.enqueue(object: Callback<List<Station>>{
+                    override fun onResponse(
+                        call: Call<List<Station>>,
+                        response: Response<List<Station>>
+                    ) {
+                        if(response.isSuccessful) {
+                            response.body()?.let {
+                                stationList = it
+                                itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(stationList)
+                                itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Station>>, t: Throwable) {
+                        Log.d("TAG","List<Station> Callback.onFailure called")
+                    }
+
+                })
+
             }
         }
 
