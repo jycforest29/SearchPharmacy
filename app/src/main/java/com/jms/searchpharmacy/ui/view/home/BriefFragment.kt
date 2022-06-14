@@ -47,7 +47,9 @@ class BriefFragment : Fragment() {
                         roadNameAddr.text = pl.load_address
                         hospitalCnt.text = pl.hospital_count.toString()
                         pharmacyCnt.text = pl.pharmacy_count.toString()
-                        ratio.text = pl.hospital_per_pharmacy.toString()
+                        ratio.text = String.format("%.2f",pl.hospital_per_pharmacy)
+                                //pl.hospital_per_pharmacy.toString()
+
                         convStoreCnt.text = pl.convenience_count.toString()
                     }
 
@@ -70,7 +72,7 @@ class BriefFragment : Fragment() {
         override fun onBindViewHolder(holder: BriefAdapter.BriefViewHolder, position: Int) {
 
             holder.bind(PLList[position])
-            Log.d("TAG","몇번")
+
 
 
         }
@@ -94,20 +96,12 @@ class BriefFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.textInputEditText.setText(args.dongName)
 
-//        binding.briefInfoRecyclerView.adapter = BriefAdapter(listOf())
-//        binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-
         binding.floatingActionButton.setOnClickListener{
 //            val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.roadNameAddr)
 //            findNavController().navigate(action)
         }
         viewModel.fetchedPLs.observe(viewLifecycleOwner) {
 
-            //TODO{여기서 가져온게 null임 }
-            for(i in it.indices) {
-                Log.d("TAG","받아온정보: ${it[i].load_address}")
-            }
 
             binding.briefInfoRecyclerView.adapter =BriefAdapter(it)
             binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())

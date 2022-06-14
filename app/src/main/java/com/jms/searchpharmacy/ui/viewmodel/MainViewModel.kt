@@ -75,6 +75,10 @@ class MainViewModel(
             ) {
                 response.body()?.let{
                     _fetchedPLs.postValue(it)
+                    for(i in it.indices) {
+                        Log.d("TAG","받아온정보2: ${it[i].load_address}")
+                        Log.d("TAG","받아온정보3: ${it[i].doctor_per_pharmacy}")
+                    }
                 }
             }
 
@@ -86,6 +90,18 @@ class MainViewModel(
 
     }
 
+//    fun fetchPLs(dongName: String) = viewModelScope.launch {
+//        val response = mainRepository.fetchPLs(dongName)
+//
+//        if(response.isSuccessful) {
+//            response.body()?.let {
+//                for(i in it.indices) {
+//                        Log.d("TAG","받아온정보2: ${it[i].conveniencecount}")
+//                        Log.d("TAG","받아온정보3: ${it[i].loadaddress}")
+//                    }
+//            }
+//        }
+//    }
 
 
 }

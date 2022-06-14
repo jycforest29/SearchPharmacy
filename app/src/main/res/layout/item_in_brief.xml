@@ -8,36 +8,44 @@
         android:id="@+id/roadNameAddr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:text="도로명주소"
+        android:layout_weight="8"
+
+
+        android:singleLine="true"
+
         />
     <TextView
         android:id="@+id/hospitalCnt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:text="병원 수"
+        android:layout_weight="2"
+
+        android:singleLine="true"
+
         />
     <TextView
         android:id="@+id/pharmacyCnt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:text="약국 수"
+        android:layout_weight="2"
+
+        android:singleLine="true"
+
         />
     <TextView
         android:id="@+id/ratio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="6"
-        android:text="병원/약국 비율"
+        android:layout_weight="4"
+        android:singleLine="true"
+
         />
     <TextView
         android:id="@+id/convStoreCnt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="7"
-        android:text="약판매 편의점 수"
+        android:layout_weight="4"
+        android:singleLine="true"
         />
 
 </LinearLayout>

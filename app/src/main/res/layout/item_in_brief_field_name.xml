@@ -3,48 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/dimBlue"
 
     >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="5dp"
+
         >
         <TextView
+            android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="8"
             android:text="도로명주소"
-            android:textSize="20sp"
+            android:textColor="@color/white"
+
             />
         <TextView
+            android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="병원 수"
-            android:textSize="20sp"
+            android:layout_weight="2"
+            android:text="병원"
+            android:textColor="@color/white"
+
             />
         <TextView
+            android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="약국 수"
-            android:textSize="20sp"
+            android:layout_weight="2"
+            android:text="약국"
+            android:textColor="@color/white"
+
             />
         <TextView
+            android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:text="병원/약국 비율"
-            android:textSize="20sp"
+            android:layout_weight="4"
+            android:text="병원/약국"
+            android:textColor="@color/white"
+
             />
         <TextView
+            android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:text="약판매 편의점 수"
-            android:textSize="20sp"
+            android:layout_weight="4"
+            android:text="편의점 수"
+            android:textColor="@color/white"
+
             />
 
     </LinearLayout>

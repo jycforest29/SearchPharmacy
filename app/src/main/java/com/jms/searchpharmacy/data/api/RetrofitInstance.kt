@@ -8,6 +8,7 @@ import com.jms.searchpharmacy.util.Constants.SERVER_BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitInstance {
@@ -19,7 +20,7 @@ object RetrofitInstance {
             .build()
     }
 
-    private fun buildRetrofit(base_url: String): Retrofit {
+    private fun buildRetrofitMoshi(base_url: String): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create())
             .client(okHttpClient)
@@ -27,13 +28,20 @@ object RetrofitInstance {
             .build()
     }
 
+    private fun buildRetrofitGson(base_url: String): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .baseUrl(base_url)
+            .build()
+    }
 
     val naverMapApi: NaverMapSearchApi by lazy {
-        buildRetrofit(NAVERMAP_BASE_URL).create(NaverMapSearchApi::class.java)
+        buildRetrofitMoshi(NAVERMAP_BASE_URL).create(NaverMapSearchApi::class.java)
     }
 
 
     val serverApi: ServerApi by lazy {
-        buildRetrofit(SERVER_BASE_URL).create(ServerApi::class.java)
+        buildRetrofitGson(SERVER_BASE_URL).create(ServerApi::class.java)
     }
 }
