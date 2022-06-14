@@ -1,6 +1,7 @@
 package com.jms.searchpharmacy.ui.view.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,18 +27,18 @@ class DetailConvFragment : Fragment() {
     private inner class DetailConvAdapter(val convList: List<Convenience>)
         : RecyclerView.Adapter<DetailConvAdapter.DetailConvViewHolder>() {
 
-        inner class DetailConvViewHolder(val itemBinding: ItemDetailConvBinding)
-            : RecyclerView.ViewHolder(itemBinding.root) {
+            inner class DetailConvViewHolder(val itemBinding: ItemDetailConvBinding)
+                : RecyclerView.ViewHolder(itemBinding.root) {
 
-                fun bind(conv: Convenience){
-                    itemBinding.apply {
-                        convAddr.text = conv.address
-                        convDate.text = conv.startdate
-                        convName.text = conv.name
+                    fun bind(conv: Convenience){
+                        itemBinding.apply {
+                            convAddr.text = conv.address
+                            convDate.text = conv.startdate
+                            convName.text = conv.name
+                        }
                     }
-                }
 
-        }
+            }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailConvViewHolder {
             val itemBinding = ItemDetailConvBinding.inflate(layoutInflater, parent, false)
