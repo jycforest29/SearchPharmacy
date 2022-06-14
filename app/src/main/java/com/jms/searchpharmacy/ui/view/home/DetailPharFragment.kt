@@ -36,7 +36,9 @@ class DetailPharFragment : Fragment() {
 
             fun bind(phar: Pharmacy){
                 itemBinding.apply {
-
+                    pharAddr.text = phar.address
+                    pharDate.text = phar.startdate
+                    pharName.text = phar.name
                 }
             }
 
