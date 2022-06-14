@@ -11,7 +11,7 @@
   <tr>
     <td>Line</td>
     <td>String name(pk)</td>
-    <td></td>
+    <td>없음</td>
     <td>1-9호선, 경춘선, 공항철도, 김포도시철도, 수인분당선, 신분당선, 우이신설경전철만 사용</td>
     <td>서울교통공사 노선별 지하철역 정보(서울 열린데이터 광장)<br> 우편번호 DB(우체국)</td>
   </tr>
@@ -33,28 +33,28 @@
   </tr>
   <tr>
     <td>Hospital</td>
-    <td>String name(pk)</td>
+    <td>int index(pk)<br>String name<br>String type<br>String address<br>String loadaddress<br>String startdate<br>int totalDoctor</td>
     <td></td>
     <td>1-9호선, 경춘선, 공항철도, 김포도시철도, 수인분당선, 신분당선, 우이신설경전철만 사용</td>
-    <td>서울교통공사 노선별 지하철역 정보(서울 열린데이터 광장)<br> 우편번호 DB(우체국)</td>
+    <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<br> 우편번호 DB(우체국)<br>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)</td>
   </tr>
   <tr>
     <td>Pharmacy</td>
-    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
     <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
     <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
     <td>동일</td>
   </tr>
   <tr>
     <td>Convenience</td>
-    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
     <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
     <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
     <td>동일</td>
   </tr>
   <tr>
     <td>PharmacyLocation</td>
-    <td>int index(pk)<br>String name<br>String line<br>String dong</td>
+    <td>int index(pk)<br>String dong<br>String loadaddress<br>int hospitalcount<br>int pharmacycount<br>int conveniencecount<br>int doctorcount<br>float hospitalperpharmacy<br>float doctorperpharmacy<br>float convenienceperpharmacy<br>int viewcount</td>
     <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
     <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
     <td>동일</td>
