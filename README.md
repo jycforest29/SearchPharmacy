@@ -1,5 +1,6 @@
 # SearchPharmacy
 # 모델별 사용한 데이터 및 데이터 전처리 기준
+우편번호 DB를 모든 테이블에 공통적으로 사용함으로써 동일한 동, 도로명 주소 범위를 가짐<br>
 <table>
   <tr>
     <th>모델명</th>
@@ -23,6 +24,7 @@
     <td>동일</td>
   </tr>
 </table>
+우편번호 기준으로 병합하여 주소-도로명 연결
 <table>
   <tr>
     <th>모델명</th>
@@ -35,21 +37,21 @@
     <td>Hospital</td>
     <td>int index(pk)<br>String name<br>String type<br>String address<br>String loadaddress<br>String startdate<br>int totalDoctor</td>
     <td></td>
-    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출</td>
+    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출<br>도로명 주소가 없는 객체도 존재<br>loadAddress제외 모든 병원 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
     <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<br> 우편번호 DB(우체국)<br>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)</td>
   </tr>
   <tr>
     <td>Pharmacy</td>
     <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
-    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
-    <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
+    <td></td>
+    <td>도로명 주소가 없는 객체도 존재<br>loadAddress제외 모든 약국 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
     <td>동일</td>
   </tr>
   <tr>
     <td>Convenience</td>
     <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
-    <td>기준 데이터(서울 열린데이터-)와 1개의 DB만 합침</td>
-    <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
+    <td></td>
+    <td>영업상태 칼럼의 값이 영업/정상, 휴업인 값들 추출<br>도로명주소나 도로명우편번호 칼럼의 값이 nan인 경우는 열 제거</td>
     <td>동일</td>
   </tr>
   <tr>
@@ -59,7 +61,10 @@
     <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 모두 다른 객체로 취급</td>
     <td>동일</td>
   </tr>
-</table>
+</table><br>
+![image](https://user-images.githubusercontent.com/103106183/173526482-8ecc0622-fa11-4997-9b4d-e84dee758d51.png)<br>
+![image](https://user-images.githubusercontent.com/103106183/173537426-fe62cb37-2eba-4aa9-b6eb-0c1d912b2a0c.png)
+
 
 # api 명세서
 <table>
