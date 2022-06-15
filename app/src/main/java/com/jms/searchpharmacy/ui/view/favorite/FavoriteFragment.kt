@@ -1,11 +1,14 @@
 package com.jms.searchpharmacy.ui.view.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -32,7 +35,47 @@ class FavoriteFragment : Fragment() {
                 : RecyclerView.ViewHolder(itemBinding.root) {
 
                     fun bind(pl: PharmacyLocation) {
-                        itemBinding.textView.text = pl.index.toString()
+                        itemBinding.apply {
+                            convCntTv.text = getString(R.string.conv_cnt, pl.convenience_count.toString())
+                            convPerPharTv.text = getString(R.string.conv_per_phar,
+                                String.format("%.2f",pl.convenience_per_pharmacy))
+                            docCntTv.text = getString(R.string.doc_cnt, pl.doctorcount.toString())
+                            docPerPharTv.text = getString(R.string.doc_per_phar,
+                                String.format("%.2f",pl.doctor_per_pharmacy))
+                            dongTv.text = pl.dong
+                            hospCntTv.text = getString(R.string.hosp_cnt, pl.hospital_count.toString())
+                            hospPerPharTv.text = getString(R.string.hosp_per_phar,
+                                String.format("%.2f",pl.hospital_per_pharmacy))
+                            loadAddrTv.text = getString(R.string.load_addr,pl.load_address)
+                            pharCntTv.text = getString(R.string.phar_cnt, pl.pharmacy_count.toString())
+
+
+                            //Detail 이동
+                            moveThisBtn.setOnClickListener {
+                                val action = FavoriteFragmentDirections.actionFragmentFavoriteToFragmentDetail(pl.index)
+                                findNavController().navigate(action)
+                            }
+
+                            shareBtn.setOnClickListener {
+                                Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, getString(R.string.send_pharLocation
+                                        ,pl.dong
+                                        ,getString(R.string.load_addr,pl.load_address)
+                                        ,getString(R.string.hosp_cnt, pl.hospital_count.toString())
+                                        ,getString(R.string.phar_cnt, pl.pharmacy_count.toString())
+                                        ,getString(R.string.doc_cnt, pl.doctorcount.toString())
+                                        ,getString(R.string.conv_cnt, pl.convenience_count.toString())
+                                        ,getString(R.string.hosp_per_phar, String.format("%.2f",pl.hospital_per_pharmacy))
+                                        ,getString(R.string.doc_per_phar, String.format("%.2f",pl.doctor_per_pharmacy))
+                                        ,getString(R.string.conv_per_phar, String.format("%.2f",pl.convenience_per_pharmacy))
+                                    ))
+                                }.also{ intent->
+                                    val chooserIntent = Intent.createChooser(intent, getString(R.string.send_title) )
+                                    startActivity(chooserIntent)
+                                }
+                            }
+                        }
                     }
             }
 
@@ -62,12 +105,17 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).mainViewModel
         favoriteAdapter = FavoriteAdapter()
-
+        binding.favoriteRv.adapter = favoriteAdapter
+        binding.favoriteRv.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.favoritePharLocations.observe(viewLifecycleOwner) {
-            favoriteAdapter.submitList(it)
-            binding.favoriteRv.adapter = favoriteAdapter
-            binding.favoriteRv.layoutManager = LinearLayoutManager(requireContext())
+            if(it.isNotEmpty()) {
+                favoriteAdapter.submitList(it)
+                binding.noItemNotice.isVisible = false
+            } else {
+                binding.noItemNotice.isVisible = true
+
+            }
 
         }
     }
