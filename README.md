@@ -5,6 +5,7 @@
 따라서 모든 모델들이 같은 범위의 동, 도로명 value들을 가져야 하고, 동-도로명 사이의 관계가 고정되어 있어야 함.(이하 '기준')<br>
 이 프로젝트에선 우체국의 우편번호 DB(칼럼으로 우편번호, 도로명주소, 법정동명 등 포함하기에 위의 조건 만족 가능)를 기준으로 모든 테이블을 생성함(이하 '기준DB')<br>
 ## 모델별 설명
+역이름으로 병합하여 지하철역-동 연결
 <table>
   <tr>
     <th>모델명</th>
@@ -18,7 +19,7 @@
     <td>String name(pk)</td>
     <td>노션의 우이경전철 -> 우이신설경전철, 경의중앙선 생략, 김포골드 -> 김포도시철도, 분당선 생략</td>
     <td>1-9호선, 경춘선, 공항철도, 김포도시철도, 수인분당선, 신분당선, 우이신설경전철만 사용</td>
-    <td>서울교통공사 노선별 지하철역 정보(서울 열린데이터 광장)<br> 기준DB</td>
+    <td>서울교통공사 노선별 지하철역 정보(서울 열린데이터 광장)<hr> 기준DB</td>
   </tr>
   <tr>
     <td>Station</td>
@@ -29,7 +30,9 @@
     <td>동일</td>
   </tr>
 </table>
-우편번호 기준으로 병합하여 주소-도로명-동 연결
+Hospital, Pharmacy : 우편번호 기준으로 기준DB와 병합하여 도로명, 법정동명 데이터 추가 -> 하나의 우편번호가 여러동에 속하는 경우가 있기에 법정동명 칼럼 삭제시 중복 발생<br>
+Convenience : 우편번호 기준으로 기준DB와 병합하여 도로명, 법정동명 데이터 추가 -> 하나의 우편번호가 여러동에 속하는 경우가 있기에 법정동명 칼럼 삭제시 중복 발생
+이후 PL에서 도로명-동 연결
 <table>
   <tr>
     <th>모델명</th>
@@ -41,30 +44,30 @@
   <tr>
     <td>Hospital</td>
     <td>int index(pk)<br>String name<br>String type<br>String address<br>String loadaddress<br>String startdate<br>int totalDoctor</td>
-    <td>도로명 주소만 없는 객체는 존재 -> 홈에 ! 버튼 만들어서 다이얼로그 띄우는 걸 생각중</td>
-    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출<br>loadAddress제외 모든 병원 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
-    <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<br> 우편번호 DB(우체국)<br>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)</td>
+    <td>도로명, 법정동명 칼럼이 null인 객체 존재 -> 홈에 ! 버튼 만들어서 다이얼로그 띄우는 걸 생각중<hr>중복 행 삭제 안한부분 있음</td>
+    <td>종별코드명 칼럼의 값이 의원, 치과의원, 병원인 경우만 추출<hr>도로명 기준으로 검색하기에 도로명 제외 모든 약국 정보가 같아도 도로명이 다르면 다른 객체로 생성</td>
+    <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<hr>기준DB</td>
   </tr>
   <tr>
     <td>Pharmacy</td>
     <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
-    <td>도로명 주소만 없는 객체는 존재 -> 홈에 ! 버튼 만들어서 다이얼로그 띄우는 걸 생각중</td>
-    <td>loadAddress제외 모든 약국 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
+    <td>도로명, 법정동명 칼럼이 null인 객체 존재 -> 홈에 ! 버튼 만들어서 다이얼로그 띄우는 걸 생각중<hr>중복 행 삭제 안한부분 있음</td>
+    <td>도로명 기준으로 검색하기에 도로명 제외 모든 약국 정보가 같아도 도로명이 다르면 다른 객체로 생성</td>
     <td>동일</td>
   </tr>
   <tr>
     <td>Convenience</td>
     <td>int index(pk)<br>String name<br>String address<br>String loadaddress<br>String startdate</td>
-    <td>도로명주소나 도로명우편번호 칼럼의 값이 nan인 경우는 열 제거<br>convInfo 중복제거 안해서 중복된 객체가 들어가있음 -> PharmacyLocation도 다시 생성해야<br>도로명 주소, 우편번호, 법정동명이 없는 객체는 제거<br></td>
-    <td>영업상태 칼럼의 값이 영업/정상, 휴업인 값들 추출<br>loadAddress제외 모든 편의점 정보가 같아도 loadAddress가 다르면 다른 객체로 생성</td>
-    <td>동일</td>
+    <td>open api가 아닌 csv로 데이터 추출<hr>convInfo 중복제거 안해서 중복된 객체가 들어가있음<hr>도로명, 우편번호, 법정동명이 없는 객체는 제거<br></td>
+    <td>영업상태 칼럼의 값이 영업/정상, 휴업인 값들 추출<hr>도로명 기준으로 검색하기에 도로명 제외 모든 약국 정보가 같아도 도로명이 다르면 다른 객체로 생성</td>
+    <td>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)<hr>기준DB</td>
   </tr>
   <tr>
     <td>PharmacyLocation</td>
     <td>int index(pk)<br>String dong<br>String loadaddress<br>int hospitalcount<br>int pharmacycount<br>int conveniencecount<br>int doctorcount<br>float hospitalperpharmacy<br>float doctorperpharmacy<br>float convenienceperpharmacy<br>int viewcount</td>
     <td>병원이 없는 경우에도 병원 count 함 -> 동일한 칼럼들에 맞춰 다시 생성해야 할듯.</td>
     <td></td>
-    <td>동일</td>
+    <td>전국 병의원 및 약국 현황(보건의료빅데이터개방시스템)<hr>서울시 안전상비의약품 판매업소 인허가 정보(서울 열린데이터 광장)<hr>기준DB</td>
   </tr>
 </table><br>
 ![image](https://user-images.githubusercontent.com/103106183/173526482-8ecc0622-fa11-4997-9b4d-e84dee758d51.png)<br>
@@ -73,9 +76,8 @@
 ![image](https://user-images.githubusercontent.com/103106183/173544183-bb7ec2eb-d4f2-44bd-977f-8eb9623d489e.png)<br>
 ![image](https://user-images.githubusercontent.com/103106183/173559267-f9d34b49-5709-4b9d-8e35-d33f386a212f.png)<br>
 ![image](https://user-images.githubusercontent.com/103106183/173736171-50a2191b-f2fa-4a61-a6ed-06a8a13f2341.png)<br>
-![image](https://user-images.githubusercontent.com/103106183/173736274-829b7626-be5a-48f0-a27f-13d33fa50a83.png)
-
-
+![image](https://user-images.githubusercontent.com/103106183/173736274-829b7626-be5a-48f0-a27f-13d33fa50a83.png)<br>
+![image](https://user-images.githubusercontent.com/103106183/173743225-ed3d1b24-9712-4fe1-a9bc-6da417659e19.png)
 
 
 # api 명세서
