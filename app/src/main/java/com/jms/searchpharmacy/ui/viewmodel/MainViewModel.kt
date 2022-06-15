@@ -12,6 +12,7 @@ import com.jms.searchpharmacy.data.model.server.*
 import retrofit2.Callback
 
 import com.jms.searchpharmacy.repository.MainRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
@@ -19,6 +20,7 @@ import retrofit2.Response
 class MainViewModel(
     private val mainRepository: MainRepository
 ): ViewModel() {
+
 
 
 
@@ -142,6 +144,8 @@ class MainViewModel(
         })
     }
 
+
+
     private val _fetchedHospList = MutableLiveData<List<Hospital>> ()
     val fetchedHospList: LiveData<List<Hospital>> get() = _fetchedHospList
 
@@ -191,5 +195,52 @@ class MainViewModel(
 
         })
     }
+
+
+    //디비 관련 부분
+
+    private val _currentPL : MutableLiveData<PharmacyLocation> = MutableLiveData()
+    val curretnPL: LiveData<PharmacyLocation> get() = _currentPL
+
+    private val _isFavoritePL: MutableLiveData<Boolean> = MutableLiveData()
+    val isFavoritePL: LiveData<Boolean> get() = _isFavoritePL
+
+    fun checkPLExists(pl: PharmacyLocation) {
+        getPharLocation(pl)
+    }
+
+    fun registerPL(pl: PharmacyLocation) {
+        _currentPL.postValue(pl)
+    }
+
+    private fun getPharLocation(pl: PharmacyLocation) {
+        mainRepository.getPharLocation(pl.index).value?.let {
+            _isFavoritePL.postValue(true)
+        }
+    }
+
+    fun deletePharLocationRegFavorite(pl: PharmacyLocation) {
+        deletePharLocation(pl)
+        _isFavoritePL.postValue(false)
+    }
+
+    fun savePharLocationRegFavorite(pl: PharmacyLocation) {
+        savePharLocation(pl)
+        _isFavoritePL.postValue(true)
+    }
+
+    //Room
+    private fun savePharLocation(pl: PharmacyLocation) = viewModelScope.launch(Dispatchers.IO) {
+        mainRepository.insertPharLocation(pl)
+    }
+
+
+    private fun deletePharLocation(pl: PharmacyLocation) = viewModelScope.launch(Dispatchers.IO) {
+        mainRepository.deletePharLocation(pl)
+    }
+
+    val favoritePharLocations: LiveData<List<PharmacyLocation>> get() = mainRepository.getFavoritePharLocations()
+
+
 
 }
