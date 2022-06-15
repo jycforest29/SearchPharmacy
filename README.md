@@ -23,7 +23,7 @@
   <tr>
     <td>Station</td>
     <td>int index(pk)<br>String name<br>String line<br>String dong</td>
-    <td>사용 DB 및 출처 칼럼의 DB 2개만 합침. /td>
+    <td>사용 DB 및 출처 칼럼의 DB 2개만 합침->서울교통공사 데이터 기준으로 추출한 호선별 역의 총 개수는 590개인데 이 중 동까지 연결한 데이터는 256개임</td>
     <td>동일한 역 이름에 대해 각각 다른 호선과 동 명을 갖는 경우 존재. 이 경우 각각 한 역이 여러개의 호선에 속할 경우, 한 역이 여러개의 동에 속할경우 등을 처리하기 위해
       모두 다른 객체로 취급 -> index라는 0부터 1씩 모든 열에 대해 증가하는 임의의 칼럼을 생성해 pk 값으로 설정</td>
     <td>동일</td>
@@ -71,7 +71,11 @@
 ![image](https://user-images.githubusercontent.com/103106183/173537426-fe62cb37-2eba-4aa9-b6eb-0c1d912b2a0c.png)<br>
 ![image](https://user-images.githubusercontent.com/103106183/173542093-c70ba0eb-ceeb-466e-bc8a-225a02f69570.png)<br>
 ![image](https://user-images.githubusercontent.com/103106183/173544183-bb7ec2eb-d4f2-44bd-977f-8eb9623d489e.png)<br>
-![image](https://user-images.githubusercontent.com/103106183/173559267-f9d34b49-5709-4b9d-8e35-d33f386a212f.png)
+![image](https://user-images.githubusercontent.com/103106183/173559267-f9d34b49-5709-4b9d-8e35-d33f386a212f.png)<br>
+![image](https://user-images.githubusercontent.com/103106183/173736171-50a2191b-f2fa-4a61-a6ed-06a8a13f2341.png)<br>
+![image](https://user-images.githubusercontent.com/103106183/173736274-829b7626-be5a-48f0-a27f-13d33fa50a83.png)
+
+
 
 
 # api 명세서
