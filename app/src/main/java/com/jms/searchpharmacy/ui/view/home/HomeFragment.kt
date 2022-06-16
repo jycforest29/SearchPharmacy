@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
                 }
                 itemView.setOnClickListener{
                     viewModel.registerPL(pl)
-                    val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.index)
+                    val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(pl.index)
                     findNavController().navigate(action)
                 }
             }
