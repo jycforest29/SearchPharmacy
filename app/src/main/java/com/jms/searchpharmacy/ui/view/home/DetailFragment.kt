@@ -21,6 +21,7 @@ import com.jms.a20220602_navermap.data.model.Addresse
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentDetailBinding
+
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 import com.naver.maps.geometry.LatLng

@@ -19,10 +19,12 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentHomeBinding
+import com.jms.searchpharmacy.databinding.ItemBestSearchBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
@@ -44,16 +46,29 @@ class HomeFragment : Fragment() {
     private inner class Top5Adapter(val PLList: List<PharmacyLocation>)
         : RecyclerView.Adapter<Top5Adapter.Top5ViewHolder>() {
 
-        inner class Top5ViewHolder(val itemBinding: ItemInBriefBinding)
+        inner class Top5ViewHolder(val itemBinding: ItemBestSearchBinding)
             : RecyclerView.ViewHolder(itemBinding.root) {
 
             fun bind(pl: PharmacyLocation){
                 itemBinding.apply {
-                    roadNameAddr.text = pl.load_address
-                    hospitalCnt.text = pl.hospital_count.toString()
-                    pharmacyCnt.text = pl.pharmacy_count.toString()
-                    ratio.text = String.format("%.2f",pl.hospital_per_pharmacy)
-                    convStoreCnt.text = pl.convenience_count.toString()
+                    Glide.with(itemView)
+                        .load(R.drawable.ic_best)
+                        .into(this.icBest)
+
+
+                    convCntTv.text = getString(R.string.conv_cnt, pl.convenience_count.toString())
+                    convPerPharTv.text = getString(R.string.conv_per_phar,
+                        String.format("%.2f",pl.convenience_per_pharmacy))
+                    docCntTv.text = getString(R.string.doc_cnt, pl.doctorcount.toString())
+                    docPerPharTv.text = getString(R.string.doc_per_phar,
+                        String.format("%.2f",pl.doctor_per_pharmacy))
+                    dongTv.text = pl.dong
+                    hospCntTv.text = getString(R.string.hosp_cnt, pl.hospital_count.toString())
+                    hospPerPharTv.text = getString(R.string.hosp_per_phar,
+                        String.format("%.2f",pl.hospital_per_pharmacy))
+                    loadAddrTv.text = getString(R.string.load_addr,pl.load_address)
+                    pharCntTv.text = getString(R.string.phar_cnt, pl.pharmacy_count.toString())
+
                 }
                 itemView.setOnClickListener{
                     viewModel.registerPL(pl)
@@ -65,7 +80,7 @@ class HomeFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Top5ViewHolder {
-            val itemBinding = ItemInBriefBinding.inflate(layoutInflater, parent, false)
+            val itemBinding = ItemBestSearchBinding.inflate(layoutInflater, parent, false)
             return Top5ViewHolder(itemBinding)
         }
 
@@ -106,6 +121,12 @@ class HomeFragment : Fragment() {
         binding.searchAddr.setOnClickListener{
             val action = HomeFragmentDirections.actionHomeFragmentToBriefFragment(null)
             findNavController().navigate(action)
+        }
+
+        binding.banner.let {
+            Glide.with(this)
+                .load(R.drawable.image_main3)
+                .into(it)
         }
 
         binding.searchMyPlace.setOnClickListener{

@@ -32,7 +32,7 @@ private const val ITEM_ROW = 1
 
 class BriefFragment : Fragment() {
 
-    private var _binding : FragmentBriefBinding? = null
+    private var _binding: FragmentBriefBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<BriefFragmentArgs>()
 
@@ -41,30 +41,32 @@ class BriefFragment : Fragment() {
         (activity as MainActivity).mainViewModel
     }
 
-    private inner class BriefAdapter(val PLList: List<PharmacyLocation>)
-        : RecyclerView.Adapter<BriefAdapter.BriefViewHolder>() {
+    private inner class BriefAdapter(val PLList: List<PharmacyLocation>) :
+        RecyclerView.Adapter<BriefAdapter.BriefViewHolder>() {
 
-            inner class BriefViewHolder(val itemBinding: ItemInBriefBinding): RecyclerView.ViewHolder(itemBinding.root) {
+        inner class BriefViewHolder(val itemBinding: ItemInBriefBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
 
 
-                fun bind(pl: PharmacyLocation) {
-                    itemBinding.apply {
-                        roadNameAddr.text = pl.load_address
-                        hospitalCnt.text = pl.hospital_count.toString()
-                        pharmacyCnt.text = pl.pharmacy_count.toString()
-                        ratio.text = String.format("%.2f",pl.hospital_per_pharmacy)
-                        convStoreCnt.text = pl.convenience_count.toString()
-                    }
+            fun bind(pl: PharmacyLocation) {
+                itemBinding.apply {
+                    roadNameAddr.text = pl.load_address
+                    hospitalCnt.text = pl.hospital_count.toString()
+                    pharmacyCnt.text = pl.pharmacy_count.toString()
+                    ratio.text = String.format("%.2f", pl.hospital_per_pharmacy)
+                    convStoreCnt.text = pl.convenience_count.toString()
+                }
 
-                    itemView.setOnClickListener{
-                        viewModel.registerPL(pl)
-                        val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.index)
-                        findNavController().navigate(action)
-                    }
-
+                itemView.setOnClickListener {
+                    viewModel.registerPL(pl)
+                    val action =
+                        BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.index)
+                    findNavController().navigate(action)
                 }
 
             }
+
+        }
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BriefViewHolder {
@@ -76,7 +78,6 @@ class BriefFragment : Fragment() {
         override fun onBindViewHolder(holder: BriefAdapter.BriefViewHolder, position: Int) {
 
             holder.bind(PLList[position])
-
 
 
         }
@@ -101,14 +102,14 @@ class BriefFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.textInputEditText.setText(args.dongName)
 
-        binding.floatingActionButton.setOnClickListener{
+        binding.floatingActionButton.setOnClickListener {
 //            val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.roadNameAddr)
 //            findNavController().navigate(action)
         }
         viewModel.fetchedPLs.observe(viewLifecycleOwner) {
 
 
-            binding.briefInfoRecyclerView.adapter =BriefAdapter(it)
+            binding.briefInfoRecyclerView.adapter = BriefAdapter(it)
             binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
 
@@ -118,27 +119,34 @@ class BriefFragment : Fragment() {
         binding.textInputEditText.imeOptions = EditorInfo.IME_ACTION_SEARCH
 
 
-        binding.textInputEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener{
+        binding.textInputEditText.setOnEditorActionListener(object :
+            TextView.OnEditorActionListener {
             override fun onEditorAction(p0: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
-                return when(actionId) {
+                return when (actionId) {
                     EditorInfo.IME_ACTION_SEARCH -> {
                         binding.textInputEditText.text?.let {
-                            if(it.isNotEmpty() && it.matches(Constants.dongNamePattern)) {
+                            if (it.isNotEmpty() && it.matches(Constants.dongNamePattern)) {
                                 viewModel.fetchPLs(it.toString())
                             } else {
-                                Toast.makeText(requireContext(),"지역을 다시 확인해주세요\n서울 지역만 가능합니다", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "지역을 다시 확인해주세요\n서울 지역만 가능합니다",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                         true
                     }
-                    else-> {false}
+                    else -> {
+                        false
+                    }
                 }
 
             }
 
         })
         binding.textInputEditText.addTextChangedListener(
-            object: TextWatcher {
+            object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 }
@@ -146,9 +154,9 @@ class BriefFragment : Fragment() {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                     binding.textInputEditText.text?.let {
-                        if(it.isNotEmpty()) {
+                        if (it.isNotEmpty()) {
                             val result = it.matches(Constants.dongNamePattern)
-                            if(result) {
+                            if (result) {
                                 //TODO{}
                             } else {
                                 //에러 띄우기
@@ -160,7 +168,7 @@ class BriefFragment : Fragment() {
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    if(!binding.textInputEditText.isFocused) {
+                    if (!binding.textInputEditText.isFocused) {
                         binding.textInputEditText.error = null
                     }
 
