@@ -3,8 +3,11 @@ package com.jms.searchpharmacy.repository
 import androidx.lifecycle.LiveData
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.data.api.RetrofitInstance.naverMapApi
+
 import com.jms.searchpharmacy.data.api.RetrofitInstance.serverApi
+
 import com.jms.searchpharmacy.data.db.SearchPharDatabase
+import com.jms.searchpharmacy.data.model.reversegeo.ReverseGeoInfo
 import com.jms.searchpharmacy.data.model.server.*
 
 import retrofit2.Call
@@ -15,6 +18,12 @@ class MainRepository(private val db: SearchPharDatabase) {
         query: String
     ): Response<GeoInfo> {
         return naverMapApi.searchGeoInfo(query)
+    }
+
+    suspend fun convertCoordsToAddr(
+        coords: String
+    ): Response<ReverseGeoInfo> {
+        return naverMapApi.convertCoordsToAddr(coords)
     }
 
     suspend fun insertPharLocation(pl: PharmacyLocation) {

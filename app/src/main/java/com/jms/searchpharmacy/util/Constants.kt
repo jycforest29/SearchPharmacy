@@ -6,4 +6,6 @@ object Constants {
     const val NAVERMAP_BASE_URL="https://naveropenapi.apigw.ntruss.com/"
     const val IP = "ded8-220-72-249-253.jp.ngrok.io"
     const val SERVER_BASE_URL = "http://$IP/api/pharmacy/"
+
+    const val PERMISSION_REQUEST_CODE = 10
 }

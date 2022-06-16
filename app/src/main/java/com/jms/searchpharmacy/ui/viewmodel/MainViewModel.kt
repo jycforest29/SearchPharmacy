@@ -8,10 +8,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jms.a20220602_navermap.data.model.GeoInfo
+import com.jms.searchpharmacy.data.model.reversegeo.Coords
 import com.jms.searchpharmacy.data.model.server.*
 import retrofit2.Callback
 
 import com.jms.searchpharmacy.repository.MainRepository
+import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -21,8 +23,22 @@ class MainViewModel(
     private val mainRepository: MainRepository
 ): ViewModel() {
 
+    private val _regionNameLiveData: MutableLiveData<String> = MutableLiveData()
+    val regionNameLiveData: LiveData<String> get() = _regionNameLiveData
 
+    fun convertCoordsToAddr(latLng: LatLng) = viewModelScope.launch(Dispatchers.IO) {
+        val response = mainRepository.convertCoordsToAddr("${latLng.longitude},${latLng.latitude}")
+        if(response.isSuccessful) {
+            response.body()?.let { body ->
+                if(body.results?.size!! > 0) {
+                    val regionName = body.results[0].region!!.area1!!.name
+                    _regionNameLiveData.postValue(regionName)
+                }
 
+            }
+        }
+
+    }
 
     private val _searchPhar = MutableLiveData<GeoInfo>()
     val searchPhar: LiveData<GeoInfo> get() = _searchPhar
@@ -196,8 +212,8 @@ class MainViewModel(
         })
     }
 
-    private val _fetchedTop5PharList = MutableLiveData<List<PharmacyLocation>> ()
-    val fetchedTop5PharList: LiveData<List<PharmacyLocation>> get() = _fetchedTop5PharList
+    private val _fetchedPLsTop5List = MutableLiveData<List<PharmacyLocation>> ()
+    val fetchedPLsTop5List: LiveData<List<PharmacyLocation>> get() = _fetchedPLsTop5List
 
     fun fetchPLsTop5() = viewModelScope.launch {
         val call = mainRepository.fetchPLsTop5()
@@ -208,7 +224,7 @@ class MainViewModel(
                 response: Response<List<PharmacyLocation>>
             ) {
                 response.body()?.let{
-                    _fetchedTop5PharList.postValue(it)
+                    _fetchedPLsTop5List.postValue(it)
                 }
             }
 
