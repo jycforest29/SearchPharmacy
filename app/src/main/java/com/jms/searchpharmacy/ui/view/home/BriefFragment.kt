@@ -58,8 +58,8 @@ class BriefFragment : Fragment() {
                     }
 
                 }
-            }
 
+            }
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BriefViewHolder {

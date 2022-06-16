@@ -196,6 +196,29 @@ class MainViewModel(
         })
     }
 
+    private val _fetchedTop5PharList = MutableLiveData<List<PharmacyLocation>> ()
+    val fetchedTop5PharList: LiveData<List<PharmacyLocation>> get() = _fetchedTop5PharList
+
+    fun fetchPLsTop5() = viewModelScope.launch {
+        val call = mainRepository.fetchPLsTop5()
+
+        call.enqueue(object: Callback<List<PharmacyLocation>>{
+            override fun onResponse(
+                call: Call<List<PharmacyLocation>>,
+                response: Response<List<PharmacyLocation>>
+            ) {
+                response.body()?.let{
+                    _fetchedTop5PharList.postValue(it)
+                }
+            }
+
+            override fun onFailure(call: Call<List<PharmacyLocation>>, t: Throwable) {
+                Log.d("TAG","List<PharmacyLocation> Callback.onFailure called")
+            }
+
+        })
+
+    }
 
     //디비 관련 부분
 

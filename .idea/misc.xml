@@ -32,13 +32,16 @@
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/item_in_select_subway.xml" value="0.2595108695652174" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.24351851851851852" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/xml/included_my_page.xml" value="0.24048913043478262" />
+        <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_brief.xml" value="0.13541666666666666" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail.xml" value="0.1526268115942029" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail_conv.xml" value="0.1875" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail_hosp.xml" value="0.14673913043478262" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail_phar.xml" value="0.1" />
+        <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_home.xml" value="0.15534420289855072" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_detail_conv.xml" value="0.1875" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_detail_hosp.xml" value="0.14673913043478262" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_detail_phar.xml" value="0.2" />
+        <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_in_brief.xml" value="0.15534420289855072" />
       </map>
     </option>
   </component>

@@ -58,4 +58,8 @@ class MainRepository(private val db: SearchPharDatabase) {
     fun fetchPharList(primaryKey: Int): Call<List<Pharmacy>> {
         return serverApi.getPharmacyList(primaryKey)
     }
+
+    fun fetchPLsTop5(): Call<List<PharmacyLocation>> {
+        return serverApi.getTop5()
+    }
 }

@@ -152,6 +152,23 @@
         >
         <!-- 이곳에 인기 검색어 넣기-->
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/included_field_name"
+                layout="@layout/item_in_brief_field_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/top5RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 
