@@ -170,7 +170,6 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 naverMap.setContentPadding(0,0,0,binding.contentLayoutInDetail.height)
             } else {
 
-
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_add)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
                 naverMap.setContentPadding(0,0,0,0)
@@ -180,7 +179,13 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
+        this.naverMap.uiSettings.apply{
+            isLocationButtonEnabled = true
+            isCompassEnabled = true
+
+        }
         setupUISettings()
+
 
         viewModel.searchPhar.observe(viewLifecycleOwner){ response->
             val addresses: List<Addresse>? = response?.addresses

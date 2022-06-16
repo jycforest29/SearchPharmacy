@@ -3,6 +3,7 @@ package com.jms.searchpharmacy.ui.view.home
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -16,12 +17,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.databinding.FragmentHomeBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 import com.jms.searchpharmacy.util.Constants.PERMISSION_REQUEST_CODE
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.util.FusedLocationSource
 import java.util.jar.Manifest
 
 
@@ -33,14 +36,41 @@ class HomeFragment : Fragment() {
     private val viewModel : MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
+
+    private lateinit var locationManager: LocationManager
+
+    private var updatedLocation : Location? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                5000,
+                10.0f
+            ) {
+                updatedLocation = it
+                Toast.makeText(requireContext(),"$it",Toast.LENGTH_SHORT).show()
+            }
+        }
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,9 +97,16 @@ class HomeFragment : Fragment() {
             ) {
                 onCheckPermission()
             } else {
-                val locationManager: LocationManager =
+                locationManager =
                     requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val currentLocation: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+
+
+                val currentLocation: Location? =
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                        ?: FusedLocationSource(this, PERMISSION_REQUEST_CODE).lastLocation
+                        ?: updatedLocation
 
                 currentLocation?.let {
                     onCheckInSeoul(currentLocation)
