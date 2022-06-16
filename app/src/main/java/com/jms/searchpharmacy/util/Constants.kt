@@ -8,4 +8,6 @@ object Constants {
     const val SERVER_BASE_URL = "http://$IP/api/pharmacy/"
 
     const val PERMISSION_REQUEST_CODE = 10
+
+    val stationNamePattern = "^[가-힇]*역".toRegex()
 }

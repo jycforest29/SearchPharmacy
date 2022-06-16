@@ -280,6 +280,30 @@ class MainViewModel(
 
     val favoritePharLocations: LiveData<List<PharmacyLocation>> get() = mainRepository.getFavoritePharLocations()
 
-
-
+//    private val _stationListLiveData: MutableLiveData<List<Station>> = MutableLiveData()
+//    val stationListLiveData: LiveData<List<Station>> get() = _stationListLiveData
+//
+//    fun getDongBySearch(stationName: String) {
+//        val call = mainRepository.getDongBySearch(stationName)
+//
+//        call.enqueue(
+//            object: Callback<List<Station>>{
+//                override fun onResponse(
+//                    call: Call<List<Station>>,
+//                    response: Response<List<Station>>
+//                ) {
+//                    if(response.isSuccessful) {
+//                        response.body()?.let {
+//                            _stationListLiveData.postValue(it)
+//                        }
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<List<Station>>, t: Throwable) {
+//                    Log.d("TAG","List<Station> Callback.onFailure called")
+//                }
+//
+//            }
+//        )
+//    }
 }
