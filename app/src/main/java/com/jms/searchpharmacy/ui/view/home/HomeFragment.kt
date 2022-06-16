@@ -39,30 +39,13 @@ class HomeFragment : Fragment() {
 
     private lateinit var locationManager: LocationManager
 
-    private var updatedLocation : Location? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                5000,
-                10.0f
-            ) {
-                updatedLocation = it
-                Toast.makeText(requireContext(),"$it",Toast.LENGTH_SHORT).show()
-            }
-        }
+
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -106,7 +89,7 @@ class HomeFragment : Fragment() {
                     locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                         ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                         ?: FusedLocationSource(this, PERMISSION_REQUEST_CODE).lastLocation
-                        ?: updatedLocation
+
 
                 currentLocation?.let {
                     onCheckInSeoul(currentLocation)
