@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
@@ -45,6 +47,11 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     private val detailFragmentList = arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
 
     private val isExpandedLiveData : MutableLiveData<Boolean> = MutableLiveData(true)
+
+    private var isExpanded: Boolean = true
+
+    private var paddingHeightExpanded: Int = 0
+    private var paddingHeight: Int = 0
 
     private lateinit var naverMap: NaverMap
 
@@ -160,21 +167,28 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     private fun setupUISettings() {
 
+        paddingHeightExpanded = binding.contentLayoutInDetail.height
+        paddingHeight = binding.toggleButton.height + 50
+        binding.toggleButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+        binding.toggleButton.setBackgroundResource(android.R.color.transparent)
+        naverMap.setContentPadding(0,0,0,binding.contentLayoutInDetail.height)
 
-        isExpandedLiveData.observe(viewLifecycleOwner) {
-            binding.viewPager2WithMap.isVisible = it
-            if(it) {
+        binding.toggleButton.setOnClickListener {
 
+
+            isExpanded = !isExpanded
+            binding.viewPager2WithMap.isVisible = isExpanded
+            if(isExpanded) {
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
-                naverMap.setContentPadding(0,0,0,binding.contentLayoutInDetail.height)
+                naverMap.setContentPadding(0,0,0,paddingHeightExpanded)
             } else {
-
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_add)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
-                naverMap.setContentPadding(0,0,0,0)
+                naverMap.setContentPadding(0,0,0,paddingHeight)
             }
         }
+
     }
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -182,8 +196,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         this.naverMap.uiSettings.apply{
             isLocationButtonEnabled = true
             isCompassEnabled = true
-
         }
+
         setupUISettings()
 
 
