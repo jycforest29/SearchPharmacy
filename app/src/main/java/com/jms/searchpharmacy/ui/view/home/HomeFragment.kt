@@ -17,9 +17,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.jms.searchpharmacy.R
+import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentHomeBinding
+import com.jms.searchpharmacy.databinding.ItemInBriefBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 import com.jms.searchpharmacy.util.Constants.PERMISSION_REQUEST_CODE
@@ -35,6 +39,41 @@ class HomeFragment : Fragment() {
 
     private val viewModel : MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
+    }
+
+    private inner class Top5Adapter(val PLList: List<PharmacyLocation>)
+        : RecyclerView.Adapter<Top5Adapter.Top5ViewHolder>() {
+
+        inner class Top5ViewHolder(val itemBinding: ItemInBriefBinding)
+            : RecyclerView.ViewHolder(itemBinding.root) {
+
+            fun bind(pl: PharmacyLocation){
+                itemBinding.apply {
+                    roadNameAddr.text = pl.load_address
+                    hospitalCnt.text = pl.hospital_count.toString()
+                    pharmacyCnt.text = pl.pharmacy_count.toString()
+                    ratio.text = String.format("%.2f",pl.hospital_per_pharmacy)
+                    convStoreCnt.text = pl.convenience_count.toString()
+                }
+                itemView.setOnClickListener{
+                    viewModel.registerPL(pl)
+                    val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.index)
+                    findNavController().navigate(action)
+                }
+            }
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Top5ViewHolder {
+            val itemBinding = ItemInBriefBinding.inflate(layoutInflater, parent, false)
+            return Top5ViewHolder(itemBinding)
+        }
+
+        override fun onBindViewHolder(holder: Top5ViewHolder, position: Int) {
+            holder.bind(PLList[position])
+        }
+
+        override fun getItemCount(): Int = PLList.size
     }
 
     private lateinit var locationManager: LocationManager
@@ -102,8 +141,10 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-
+        viewModel.fetchedPLsTop5List.observe(viewLifecycleOwner) {
+            binding.top5RecyclerView.adapter = Top5Adapter(it)
+            binding.top5RecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
 
     }
 
