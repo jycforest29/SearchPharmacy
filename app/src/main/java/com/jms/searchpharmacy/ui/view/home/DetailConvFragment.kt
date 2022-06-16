@@ -16,6 +16,9 @@ import com.jms.searchpharmacy.databinding.ItemDetailConvBinding
 import com.jms.searchpharmacy.databinding.ItemDetailHospBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class DetailConvFragment : Fragment() {
@@ -68,6 +71,12 @@ class DetailConvFragment : Fragment() {
         viewModel.fetchedConvList.observe(viewLifecycleOwner) {
             binding.convRv.adapter = DetailConvAdapter(it)
             binding.convRv.layoutManager = LinearLayoutManager(requireContext())
+            Log.d("TAG","편의점 사이즈 ${it.size}")
+            for(i in 0 until if(it.size > 5) 5 else it.size) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.searchConvLoc(it[i].address)
+                }
+            }
         }
     }
 

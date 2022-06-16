@@ -1,4 +1,4 @@
-package com.jms.searchpharmacy.data.api
+package com.jms.searchpharmacy.data.api.navermap
 
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.util.Constants.CLIENT_ID

@@ -1,5 +1,6 @@
 package com.jms.searchpharmacy.data.api
 
+import com.jms.searchpharmacy.data.api.navermap.NaverMapSearchApi
 import com.jms.searchpharmacy.data.api.server.ServerApi
 
 

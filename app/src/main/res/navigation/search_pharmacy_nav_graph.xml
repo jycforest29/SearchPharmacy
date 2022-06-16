@@ -40,6 +40,12 @@
         <action
             android:id="@+id/action_homeFragment_to_briefFragment"
             app:destination="@id/fragment_brief" />
+        <action
+            android:id="@+id/action_fragment_home_to_fragment_favorite"
+            app:destination="@id/fragment_favorite" />
+        <action
+            android:id="@+id/action_fragment_home_to_fragment_settings"
+            app:destination="@id/fragment_settings" />
     </fragment>
     <fragment
         android:id="@+id/fragment_select_subway"
@@ -54,7 +60,11 @@
         android:id="@+id/fragment_favorite"
         android:name="com.jms.searchpharmacy.ui.view.favorite.FavoriteFragment"
         android:label="fragment_favorite"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_fragment_favorite_to_fragment_detail"
+            app:destination="@id/fragment_detail" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_settings"
         android:name="com.jms.searchpharmacy.ui.view.settings.SettingsFragment"

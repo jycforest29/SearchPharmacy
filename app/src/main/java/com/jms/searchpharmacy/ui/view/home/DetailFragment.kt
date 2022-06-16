@@ -1,5 +1,6 @@
 package com.jms.searchpharmacy.ui.view.home
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -16,6 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 import com.jms.a20220602_navermap.data.model.Addresse
 import com.jms.searchpharmacy.R
+import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentDetailBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
@@ -24,6 +26,8 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
+import kotlinx.coroutines.processNextEventInCurrentThread
+import kotlin.properties.Delegates
 
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
@@ -36,15 +40,17 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     private val viewModel : MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
-
+    private lateinit var currentPL : PharmacyLocation
 
     private val detailFragmentList = arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
 
     private val isExpandedLiveData : MutableLiveData<Boolean> = MutableLiveData(true)
 
-
-
     private lateinit var naverMap: NaverMap
+
+    private val isFavorite get() = viewModel.isFavoritePL.value ?: false
+
+    private var dbDelayTime = System.currentTimeMillis()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,13 +83,27 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             fetchHospList(args.primaryKey)
             fetchPharList(args.primaryKey)
         }
+
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         loadDetailList()
 
+
+        viewModel.curretnPL.observe(viewLifecycleOwner) {
+            currentPL = it
+            viewModel.checkPLExists(it)
+        }
+        viewModel.isFavoritePL.observe(viewLifecycleOwner) {
+            if(it) {
+                binding.addFavoriteBtn.setColorFilter(resources.getColor(android.R.color.transparent))
+            } else {
+                binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.lightGrey))
+            }
+        }
 
         binding.viewPager2WithMap.adapter = object: FragmentStateAdapter(this){
             override fun getItemCount(): Int = detailFragmentList.size
@@ -111,9 +131,30 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         binding.toggleButton.setOnClickListener {
             isExpandedLiveData.postValue(!isExpandedLiveData.value!!)
-            //isExpanded = !isExpanded
 
         }
+
+        binding.addFavoriteBtn.setOnClickListener {
+            // 디비 작업 딜레이 1초
+            if(System.currentTimeMillis()-dbDelayTime >= 1000) {
+                Log.d("TAG","확인: $isFavorite")
+                if (isFavorite) {
+                    // 삭제
+                    viewModel.deletePharLocationRegFavorite(currentPL)
+                    Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
+                    binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.lightGrey))
+
+                } else {
+                    // 추가
+                    viewModel.savePharLocationRegFavorite(currentPL)
+                    Toast.makeText(requireContext(), "저장", Toast.LENGTH_SHORT).show()
+                    binding.addFavoriteBtn.setColorFilter(resources.getColor(android.R.color.transparent))
+                }
+
+            }
+        }
+
+
     }
 
 
