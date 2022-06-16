@@ -9,5 +9,7 @@ object Constants {
 
     const val PERMISSION_REQUEST_CODE = 10
 
-    val stationNamePattern = "^[가-힇]*역".toRegex()
+    val stationNamePattern = "^[가-힇|0-9]*역".toRegex()
+
+    val dongNamePattern = "^[가-힇|0-9]*동".toRegex()
 }

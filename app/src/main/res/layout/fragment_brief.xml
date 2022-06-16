@@ -27,6 +27,9 @@
             android:id="@+id/textInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:imeActionLabel="검색"
+            android:inputType="text"
             android:drawableLeft="@drawable/ic_search_24"
             android:hint="동이름..." />
 

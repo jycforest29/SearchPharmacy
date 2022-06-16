@@ -1,11 +1,15 @@
 package com.jms.searchpharmacy.ui.view.home
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -19,6 +23,7 @@ import com.jms.searchpharmacy.databinding.ItemInBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefFieldNameBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+import com.jms.searchpharmacy.util.Constants
 import java.io.LineNumberReader
 
 
@@ -88,6 +93,7 @@ class BriefFragment : Fragment() {
         _binding = FragmentBriefBinding.inflate(layoutInflater, container, false)
         // Inflate the layout for this fragment
 
+
         return binding.root
     }
 
@@ -108,6 +114,60 @@ class BriefFragment : Fragment() {
 
         viewModel.fetchPLs(args.dongName ?: "")
 
+
+        binding.textInputEditText.imeOptions = EditorInfo.IME_ACTION_SEARCH
+
+
+        binding.textInputEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener{
+            override fun onEditorAction(p0: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
+                return when(actionId) {
+                    EditorInfo.IME_ACTION_SEARCH -> {
+                        binding.textInputEditText.text?.let {
+                            if(it.isNotEmpty() && it.matches(Constants.dongNamePattern)) {
+                                viewModel.fetchPLs(it.toString())
+                            } else {
+                                Toast.makeText(requireContext(),"지역을 다시 확인해주세요\n서울 지역만 가능합니다", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        true
+                    }
+                    else-> {false}
+                }
+
+            }
+
+        })
+        binding.textInputEditText.addTextChangedListener(
+            object: TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                    binding.textInputEditText.text?.let {
+                        if(it.isNotEmpty()) {
+                            val result = it.matches(Constants.dongNamePattern)
+                            if(result) {
+                                //TODO{}
+                            } else {
+                                //에러 띄우기
+                                binding.textInputEditText.setError("'동'으로 끝나야 합니다", null)
+                            }
+                        }
+                    }
+
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if(!binding.textInputEditText.isFocused) {
+                        binding.textInputEditText.error = null
+                    }
+
+                }
+
+            }
+        )
 
     }
 
