@@ -6,11 +6,12 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ import com.jms.searchpharmacy.data.model.server.Station
 import com.jms.searchpharmacy.databinding.*
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
+import com.jms.searchpharmacy.util.Constants.stationNamePattern
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -82,88 +84,7 @@ class SelectSubwayFragment : Fragment() {
 
         override fun getItemCount(): Int = stationList.size
 
-        private fun getDongByStation(station_name: String) {
-            val call = serverApi.getDongByStation(station_name)
-            call.enqueue(object : Callback<List<Station>> {
-                override fun onResponse(
-                    call: Call<List<Station>>,
-                    response: Response<List<Station>>
-                ) {
-                    if(response.isSuccessful) {
-                        response.body()?.let {
 
-                            if(it.size > 1) {
-                                // 다이얼로그로 보내기
-                                val dialogBinding = DialogSelectDongBinding.inflate(layoutInflater)
-
-
-
-
-                                alertDialog =
-                                    AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
-                                        .setView(dialogBinding.root)
-                                        .create()
-
-                                dialogBinding.apply {
-                                    dialogRv.adapter = DialogAdapter(it)
-                                    dialogRv.layoutManager =
-                                        LinearLayoutManager(requireContext())
-                                    dialogRv.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
-                                        override fun onInterceptTouchEvent(
-                                            rv: RecyclerView,
-                                            e: MotionEvent
-                                        ): Boolean {
-                                            return false
-                                        }
-
-                                        override fun onTouchEvent(
-                                            rv: RecyclerView,
-                                            e: MotionEvent
-                                        ) {
-                                            when(e.action){
-                                                MotionEvent.ACTION_BUTTON_PRESS -> {
-                                                    alertDialog.dismiss()
-
-                                                }
-                                                else->{}
-                                            }
-                                        }
-
-                                        override fun onRequestDisallowInterceptTouchEvent(
-                                            disallowIntercept: Boolean
-                                        ) {
-
-                                        }
-
-                                    })
-                                    closeDialogBtn.setOnClickListener {
-                                        //다이얼로그 닫기
-                                        alertDialog.dismiss()
-                                    }
-
-                                }
-
-                                //뒷배경 투명하게
-                                alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                alertDialog.show()
-                            } else {
-                                val dongName = it[0].dong
-                                moveToDetailFragment(dongName)
-                            }
-                        }
-                    }
-
-                }
-
-                override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-                    Toast.makeText(
-                        requireContext(),
-                        "An error has occured",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            })
-        }
     }
     private fun moveToDetailFragment(dongName: String) {
 
@@ -171,7 +92,88 @@ class SelectSubwayFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    private fun getDongByStation(station_name: String) {
+        val call = serverApi.getDongByStation(station_name)
+        call.enqueue(object : Callback<List<Station>> {
+            override fun onResponse(
+                call: Call<List<Station>>,
+                response: Response<List<Station>>
+            ) {
+                if(response.isSuccessful) {
+                    response.body()?.let {
 
+                        if(it.size > 1) {
+                            // 다이얼로그로 보내기
+                            val dialogBinding = DialogSelectDongBinding.inflate(layoutInflater)
+
+
+
+
+                            alertDialog =
+                                AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
+                                    .setView(dialogBinding.root)
+                                    .create()
+
+                            dialogBinding.apply {
+                                dialogRv.adapter = DialogAdapter(it)
+                                dialogRv.layoutManager =
+                                    LinearLayoutManager(requireContext())
+                                dialogRv.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
+                                    override fun onInterceptTouchEvent(
+                                        rv: RecyclerView,
+                                        e: MotionEvent
+                                    ): Boolean {
+                                        return false
+                                    }
+
+                                    override fun onTouchEvent(
+                                        rv: RecyclerView,
+                                        e: MotionEvent
+                                    ) {
+                                        when(e.action){
+                                            MotionEvent.ACTION_BUTTON_PRESS -> {
+                                                alertDialog.dismiss()
+
+                                            }
+                                            else->{}
+                                        }
+                                    }
+
+                                    override fun onRequestDisallowInterceptTouchEvent(
+                                        disallowIntercept: Boolean
+                                    ) {
+
+                                    }
+
+                                })
+                                closeDialogBtn.setOnClickListener {
+                                    //다이얼로그 닫기
+                                    alertDialog.dismiss()
+                                }
+
+                            }
+
+                            //뒷배경 투명하게
+                            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            alertDialog.show()
+                        } else {
+                            val dongName = it[0].dong
+                            moveToDetailFragment(dongName)
+                        }
+                    }
+                }
+
+            }
+
+            override fun onFailure(call: Call<List<Station>>, t: Throwable) {
+                Toast.makeText(
+                    requireContext(),
+                    "역 이름을 다시 확인해주세요",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
+    }
 
 
     private inner class DialogAdapter(val stationList: List<Station>): RecyclerView.Adapter<DialogAdapter.DialogViewHolder>(){
@@ -300,7 +302,61 @@ class SelectSubwayFragment : Fragment() {
             binding.allLinesRecyclerView.adapter = BriefNameAdapter(lineList)
             binding.allLinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+//
+//        viewModel.stationListLiveData.observe(viewLifecycleOwner) {
+//
+//        }
+        binding.textInputEditText.imeOptions = EditorInfo.IME_ACTION_SEARCH
 
+
+        binding.textInputEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener{
+            override fun onEditorAction(p0: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
+                return when(actionId) {
+                    EditorInfo.IME_ACTION_SEARCH -> {
+                        binding.textInputEditText.text?.let {
+                            if(it.isNotEmpty() && it.matches(stationNamePattern)) {
+                                getDongByStation(it.toString())
+                            }
+                        }
+                        true
+                    }
+                    else-> {false}
+                }
+
+            }
+
+        })
+        binding.textInputEditText.addTextChangedListener(
+            object: TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                    binding.textInputEditText.text?.let {
+                        if(it.isNotEmpty()) {
+                            val result = it.matches(stationNamePattern)
+                            if(result) {
+                               //TODO{}
+                            } else {
+                                //에러 띄우기
+                                binding.textInputEditText.setError("'역'으로 끝나야 합니다", null)
+                            }
+                        }
+                    }
+
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if(!binding.textInputEditText.isFocused) {
+                        binding.textInputEditText.error = null
+                    }
+
+                }
+
+            }
+        )
     }
 
 

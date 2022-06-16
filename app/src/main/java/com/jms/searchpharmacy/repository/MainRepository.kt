@@ -34,6 +34,9 @@ class MainRepository(private val db: SearchPharDatabase) {
         db.searchPharDao().deletePL(pl)
     }
 
+    fun getDongBySearch(stationName: String): Call<List<Station>> {
+        return serverApi.getDongBySearch(stationName)
+    }
 
     fun getFavoritePharLocations(): LiveData<List<PharmacyLocation>> {
         return db.searchPharDao().getFavoritePharLocation()

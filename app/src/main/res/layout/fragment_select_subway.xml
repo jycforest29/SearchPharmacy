@@ -28,6 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_search_24"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:imeActionLabel="검색"
             android:hint="역이름..." />
 
 
