@@ -145,6 +145,7 @@ class HomeFragment : Fragment() {
             binding.top5RecyclerView.adapter = Top5Adapter(it)
             binding.top5RecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+        viewModel.fetchPLsTop5()
 
     }
 
