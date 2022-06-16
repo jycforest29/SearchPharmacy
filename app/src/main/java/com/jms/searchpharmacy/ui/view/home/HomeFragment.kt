@@ -69,10 +69,16 @@ class HomeFragment : Fragment() {
             } else {
                 val locationManager: LocationManager =
                     requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val currentLocation: Location =
-                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
+                val currentLocation: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
-                onCheckInSeoul(currentLocation)
+                currentLocation?.let {
+                    onCheckInSeoul(currentLocation)
+                }
+
+                if(currentLocation == null) {
+                    Toast.makeText(requireContext(), "GPS, 인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
 
