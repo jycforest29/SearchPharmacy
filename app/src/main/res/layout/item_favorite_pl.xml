@@ -29,7 +29,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="서초동"
+                    android:layout_gravity="bottom"
                     android:textSize="25sp"
+
                     />
                 <TextView
                     android:id="@+id/load_addr_tv"
@@ -38,6 +40,8 @@
                     android:layout_height="wrap_content"
                     tools:text="(서초구 서초중앙로 38 정우빌딩)"
                     android:textSize="15sp"
+                    android:layout_gravity="bottom"
+
                     android:layout_marginStart="5dp"
                     />
                 <ImageView

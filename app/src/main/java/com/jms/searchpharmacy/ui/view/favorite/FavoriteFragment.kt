@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
+import com.google.android.material.snackbar.Snackbar
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentFavoriteBinding
@@ -28,13 +26,55 @@ class FavoriteFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var favoriteAdapter: FavoriteAdapter
+
+    private val favoriteListItemHelper = object: ItemTouchHelper.Callback() {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            return makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+        }
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            (viewHolder as? FavoriteAdapter.FavoriteViewHolder)?.let {
+                val position = it.bindingAdapterPosition
+                val pl = favoriteAdapter.currentList[position]
+                viewModel.deletePharLocationRegFavorite(pl)
+                Snackbar.make(requireView(),"찜 목록에서 제거되었습니다", Snackbar.LENGTH_SHORT).apply {
+                    setAction("취소") {
+                        viewModel.savePharLocationRegFavorite(pl)
+                    }
+                }.show()
+            }
+        }
+
+        override fun isItemViewSwipeEnabled(): Boolean {
+            return true
+        }
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return false
+        }
+
+    }
+
     private inner class FavoriteAdapter()
         : ListAdapter<PharmacyLocation, FavoriteAdapter.FavoriteViewHolder>(PharDiffCallback) {
 
             inner class FavoriteViewHolder(val itemBinding: ItemFavoritePlBinding)
                 : RecyclerView.ViewHolder(itemBinding.root) {
+                    //lateinit var pl: PharmacyLocation
 
                     fun bind(pl: PharmacyLocation) {
+                       //this.pl = pl
                         itemBinding.apply {
                             convCntTv.text = getString(R.string.conv_cnt, pl.convenience_count.toString())
                             convPerPharTv.text = getString(R.string.conv_per_phar,
@@ -106,6 +146,7 @@ class FavoriteFragment : Fragment() {
         viewModel = (activity as MainActivity).mainViewModel
         favoriteAdapter = FavoriteAdapter()
         binding.favoriteRv.adapter = favoriteAdapter
+        ItemTouchHelper(favoriteListItemHelper).attachToRecyclerView(binding.favoriteRv)
         binding.favoriteRv.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.favoritePharLocations.observe(viewLifecycleOwner) {
