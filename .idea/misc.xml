@@ -37,11 +37,12 @@
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail_conv.xml" value="0.1875" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail_hosp.xml" value="0.14673913043478262" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_detail_phar.xml" value="0.1" />
-        <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_home.xml" value="0.15534420289855072" />
+        <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_detail_conv.xml" value="0.1875" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_detail_hosp.xml" value="0.14673913043478262" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_detail_phar.xml" value="0.2" />
         <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_in_brief.xml" value="0.15534420289855072" />
+        <entry key="..\:/Users/USER/Desktop/SearchPharmacyJycforest/app/src/main/res/layout/item_in_brief_field_name.xml" value="0.12132725430597771" />
       </map>
     </option>
   </component>
