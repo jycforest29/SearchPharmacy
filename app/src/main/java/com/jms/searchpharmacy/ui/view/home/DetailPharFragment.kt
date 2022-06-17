@@ -21,20 +21,20 @@ import kotlinx.coroutines.launch
 
 
 class DetailPharFragment : Fragment() {
-    private var _binding : FragmentDetailPharBinding? = null
+    private var _binding: FragmentDetailPharBinding? = null
     private val binding get() = _binding!!
-    private val viewModel : MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
 
 
-    private inner class DetailPharAdapter(val pharList: List<Pharmacy>)
-        : RecyclerView.Adapter<DetailPharAdapter.DetailPharViewHolder>() {
+    private inner class DetailPharAdapter(val pharList: List<Pharmacy>) :
+        RecyclerView.Adapter<DetailPharAdapter.DetailPharViewHolder>() {
 
-        inner class DetailPharViewHolder(val itemBinding: ItemDetailPharBinding)
-            : RecyclerView.ViewHolder(itemBinding.root) {
+        inner class DetailPharViewHolder(val itemBinding: ItemDetailPharBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
 
-            fun bind(phar: Pharmacy){
+            fun bind(phar: Pharmacy) {
                 itemBinding.apply {
                     pharAddr.text = phar.address
                     pharDate.text = phar.startdate
@@ -58,6 +58,7 @@ class DetailPharFragment : Fragment() {
 
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,7 +75,7 @@ class DetailPharFragment : Fragment() {
             binding.pharRv.adapter = DetailPharAdapter(it)
             binding.pharRv.layoutManager = LinearLayoutManager(requireContext())
 
-            for(i in 0 until if(it.size > 5) 5 else it.size) {
+            for (i in 0 until if (it.size > 5) 5 else it.size) {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.searchPharLoc(it[i].address)
                 }

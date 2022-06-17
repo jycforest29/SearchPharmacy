@@ -1,6 +1,7 @@
 package com.jms.searchpharmacy.data.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 
@@ -21,5 +22,7 @@ interface SearchPharDao {
 
 
     @Query("SELECT * FROM pharLocation WHERE `index` = :index")
-    fun getPharLocation(index: Int): LiveData<PharmacyLocation>
+    fun getPharLocation(index: Int): LiveData<PharmacyLocation?>
+
+
 }

@@ -21,7 +21,7 @@ import com.jms.searchpharmacy.ui.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding : ActivityMainBinding by lazy {
+    private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
     val mainViewModel: MainViewModel by lazy {
@@ -44,29 +44,30 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setupJetpackNavigation() {
-        val host = supportFragmentManager.findFragmentById(R.id.search_pharmacy_host_fragment) as NavHostFragment
+        val host =
+            supportFragmentManager.findFragmentById(R.id.search_pharmacy_host_fragment) as NavHostFragment
         navController = host.navController
         binding.bottomNavigationView.setupWithNavController(navController)
 
         binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
 
-            when(menuItem.itemId) {
+            when (menuItem.itemId) {
                 R.id.fragment_home -> {
                     navController.navigate(R.id.fragment_home)
                     true
                 }
 
-                R.id.fragment_favorite->{
+                R.id.fragment_favorite -> {
                     navController.navigate(R.id.fragment_favorite)
                     true
                 }
 
-                R.id.fragment_settings->{
+                R.id.fragment_settings -> {
                     navController.navigate(R.id.fragment_settings)
                     true
                 }
 
-                else-> {
+                else -> {
 
                     false
                 }

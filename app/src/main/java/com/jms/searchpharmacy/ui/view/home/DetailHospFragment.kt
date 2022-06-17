@@ -19,30 +19,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailHospFragment : Fragment() {
-    private var _binding : FragmentDetailHospBinding? = null
+    private var _binding: FragmentDetailHospBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel : MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
-    private inner class DetailHospAdapter(val hospList: List<Hospital>)
-        : RecyclerView.Adapter<DetailHospAdapter.DetailHospViewHolder>() {
 
-            inner class DetailHospViewHolder(val itemBinding: ItemDetailHospBinding)
-                : RecyclerView.ViewHolder(itemBinding.root) {
+    private inner class DetailHospAdapter(val hospList: List<Hospital>) :
+        RecyclerView.Adapter<DetailHospAdapter.DetailHospViewHolder>() {
 
-                    fun bind(hosp: Hospital){
-                        itemBinding.apply {
-                            hospAddr.text = hosp.address
-                            hospDate.text = hosp.startdate
-                            hospDocCnt.text = hosp.total_doctor.toString()
-                            hospName.text = hosp.name
-                            hospType.text = hosp.type
+        inner class DetailHospViewHolder(val itemBinding: ItemDetailHospBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
 
-                        }
-                    }
+            fun bind(hosp: Hospital) {
+                itemBinding.apply {
+                    hospAddr.text = hosp.address
+                    hospDate.text = hosp.startdate
+                    hospDocCnt.text = hosp.total_doctor.toString()
+                    hospName.text = hosp.name
+                    hospType.text = hosp.type
 
+                }
             }
+
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailHospViewHolder {
             val itemBinding = ItemDetailHospBinding.inflate(layoutInflater, parent, false)
@@ -74,7 +75,7 @@ class DetailHospFragment : Fragment() {
             binding.hospRv.adapter = DetailHospAdapter(it)
             binding.hospRv.layoutManager = LinearLayoutManager(requireContext())
 
-            for(i in 0 until if(it.size > 5) 5 else it.size) {
+            for (i in 0 until if (it.size > 5) 5 else it.size) {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.searchHospLoc(it[i].address)
                 }
@@ -82,6 +83,7 @@ class DetailHospFragment : Fragment() {
         }
 
     }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

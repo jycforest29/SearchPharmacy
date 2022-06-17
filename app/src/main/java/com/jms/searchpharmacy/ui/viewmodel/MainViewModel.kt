@@ -2,11 +2,9 @@ package com.jms.searchpharmacy.ui.viewmodel
 
 import android.accounts.NetworkErrorException
 import android.util.Log
+import android.view.animation.Transformation
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.data.model.reversegeo.Coords
 import com.jms.searchpharmacy.data.model.server.*
@@ -21,16 +19,16 @@ import retrofit2.Response
 
 class MainViewModel(
     private val mainRepository: MainRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _regionNameLiveData: MutableLiveData<String> = MutableLiveData()
     val regionNameLiveData: LiveData<String> get() = _regionNameLiveData
 
     fun convertCoordsToAddr(latLng: LatLng) = viewModelScope.launch(Dispatchers.IO) {
         val response = mainRepository.convertCoordsToAddr("${latLng.longitude},${latLng.latitude}")
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { body ->
-                if(body.results?.size!! > 0) {
+                if (body.results?.size!! > 0) {
                     val regionName = body.results[0].region!!.area1!!.name
                     _regionNameLiveData.postValue(regionName)
                 }
@@ -47,9 +45,9 @@ class MainViewModel(
     fun searchPharLoc(query: String) = viewModelScope.launch {
         val response = mainRepository.searchGeoInfo(query)
 
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { body ->
-                if(body.meta?.totalCount!! > 0) {
+                if (body.meta?.totalCount!! > 0) {
                     _searchPhar.postValue(body)
                 }
             }
@@ -63,9 +61,9 @@ class MainViewModel(
     fun searchConvLoc(query: String) = viewModelScope.launch {
         val response = mainRepository.searchGeoInfo(query)
 
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { body ->
-                if(body.meta?.totalCount!! > 0) {
+                if (body.meta?.totalCount!! > 0) {
                     _searchConv.postValue(body)
                 }
             }
@@ -79,9 +77,9 @@ class MainViewModel(
     fun searchHospLoc(query: String) = viewModelScope.launch {
         val response = mainRepository.searchGeoInfo(query)
 
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { body ->
-                if(body.meta?.totalCount!! > 0) {
+                if (body.meta?.totalCount!! > 0) {
                     _searchHosp.postValue(body)
                 }
             }
@@ -105,7 +103,7 @@ class MainViewModel(
             }
 
             override fun onFailure(call: Call<List<Line>>, t: Throwable) {
-                Log.d("TAG","List<Line> Callback.onFailure called")
+                Log.d("TAG", "List<Line> Callback.onFailure called")
             }
         })
     }
@@ -116,41 +114,41 @@ class MainViewModel(
     fun fetchPLs(dongName: String) = viewModelScope.launch {
         val call = mainRepository.fetchPLs(dongName)
 
-        call.enqueue(object: Callback<List<PharmacyLocation>>{
+        call.enqueue(object : Callback<List<PharmacyLocation>> {
             override fun onResponse(
                 call: Call<List<PharmacyLocation>>,
                 response: Response<List<PharmacyLocation>>
             ) {
-                response.body()?.let{
+                response.body()?.let {
                     _fetchedPLs.postValue(it)
 
                 }
             }
 
             override fun onFailure(call: Call<List<PharmacyLocation>>, t: Throwable) {
-                Log.d("TAG","List<Line> Callback.onFailure called")
+                Log.d("TAG", "List<Line> Callback.onFailure called")
             }
 
         })
 
     }
 
-    private val _fetchedPharList = MutableLiveData<List<Pharmacy>> ()
+    private val _fetchedPharList = MutableLiveData<List<Pharmacy>>()
     val fetchedPharList: LiveData<List<Pharmacy>> get() = _fetchedPharList
 
     fun fetchPharList(primaryKey: Int) = viewModelScope.launch {
         val call = mainRepository.fetchPharList(primaryKey)
 
-        call.enqueue(object: Callback<List<Pharmacy>>{
+        call.enqueue(object : Callback<List<Pharmacy>> {
             override fun onFailure(call: Call<List<Pharmacy>>, t: Throwable) {
-                Log.d("TAG","List<Pharmacy> Callback.onFailure called")
+                Log.d("TAG", "List<Pharmacy> Callback.onFailure called")
             }
 
             override fun onResponse(
                 call: Call<List<Pharmacy>>,
                 response: Response<List<Pharmacy>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     response.body()?.let {
                         _fetchedPharList.postValue(it)
                     }
@@ -161,23 +159,22 @@ class MainViewModel(
     }
 
 
-
-    private val _fetchedHospList = MutableLiveData<List<Hospital>> ()
+    private val _fetchedHospList = MutableLiveData<List<Hospital>>()
     val fetchedHospList: LiveData<List<Hospital>> get() = _fetchedHospList
 
     fun fetchHospList(primaryKey: Int) = viewModelScope.launch {
         val call = mainRepository.fetchHospList(primaryKey)
 
-        call.enqueue(object: Callback<List<Hospital>>{
+        call.enqueue(object : Callback<List<Hospital>> {
             override fun onFailure(call: Call<List<Hospital>>, t: Throwable) {
-                Log.d("TAG","List<Hospital> Callback.onFailure called")
+                Log.d("TAG", "List<Hospital> Callback.onFailure called")
             }
 
             override fun onResponse(
                 call: Call<List<Hospital>>,
                 response: Response<List<Hospital>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     response.body()?.let {
                         _fetchedHospList.postValue(it)
                     }
@@ -187,22 +184,22 @@ class MainViewModel(
         })
     }
 
-    private val _fetchedConvList = MutableLiveData<List<Convenience>> ()
+    private val _fetchedConvList = MutableLiveData<List<Convenience>>()
     val fetchedConvList: LiveData<List<Convenience>> get() = _fetchedConvList
 
     fun fetchConvList(primaryKey: Int) = viewModelScope.launch {
         val call = mainRepository.fetchConvList(primaryKey)
 
-        call.enqueue(object: Callback<List<Convenience>>{
+        call.enqueue(object : Callback<List<Convenience>> {
             override fun onFailure(call: Call<List<Convenience>>, t: Throwable) {
-                Log.d("TAG","List<Convenience> Callback.onFailure called")
+                Log.d("TAG", "List<Convenience> Callback.onFailure called")
             }
 
             override fun onResponse(
                 call: Call<List<Convenience>>,
                 response: Response<List<Convenience>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     response.body()?.let {
                         _fetchedConvList.postValue(it)
                     }
@@ -212,99 +209,53 @@ class MainViewModel(
         })
     }
 
-    private val _fetchedPLsTop5List = MutableLiveData<List<PharmacyLocation>> ()
+    private val _fetchedPLsTop5List = MutableLiveData<List<PharmacyLocation>>()
     val fetchedPLsTop5List: LiveData<List<PharmacyLocation>> get() = _fetchedPLsTop5List
 
     fun fetchPLsTop5() = viewModelScope.launch {
         val call = mainRepository.fetchPLsTop5()
 
-        call.enqueue(object: Callback<List<PharmacyLocation>>{
+        call.enqueue(object : Callback<List<PharmacyLocation>> {
             override fun onResponse(
                 call: Call<List<PharmacyLocation>>,
                 response: Response<List<PharmacyLocation>>
             ) {
-                response.body()?.let{
+                response.body()?.let {
                     _fetchedPLsTop5List.postValue(it)
                 }
             }
 
             override fun onFailure(call: Call<List<PharmacyLocation>>, t: Throwable) {
-                Log.d("TAG","List<PharmacyLocation> Callback.onFailure called")
+                Log.d("TAG", "List<PharmacyLocation> Callback.onFailure called")
             }
 
         })
 
     }
 
-    //디비 관련 부분
-
-    private val _currentPL : MutableLiveData<PharmacyLocation> = MutableLiveData()
-    val curretnPL: LiveData<PharmacyLocation> get() = _currentPL
-
-    private val _isFavoritePL: MutableLiveData<Boolean> = MutableLiveData()
-    val isFavoritePL: LiveData<Boolean> get() = _isFavoritePL
-
-    fun checkPLExists(pl: PharmacyLocation) {
-        getPharLocation(pl)
-    }
-
-    fun registerPL(pl: PharmacyLocation) {
-        _currentPL.postValue(pl)
-
-    }
-
-    private fun getPharLocation(pl: PharmacyLocation) {
-        mainRepository.getPharLocation(pl.index).value?.let {
-            _isFavoritePL.postValue(true)
-        }
-    }
-
-    fun deletePharLocationRegFavorite(pl: PharmacyLocation) {
-        deletePharLocation(pl)
-        _isFavoritePL.postValue(false)
-    }
-
-    fun savePharLocationRegFavorite(pl: PharmacyLocation) {
-        savePharLocation(pl)
-        _isFavoritePL.postValue(true)
-    }
 
     //Room
-    private fun savePharLocation(pl: PharmacyLocation) = viewModelScope.launch(Dispatchers.IO) {
+    fun savePharLocation(pl: PharmacyLocation) = viewModelScope.launch(Dispatchers.IO) {
         mainRepository.insertPharLocation(pl)
     }
 
 
-    private fun deletePharLocation(pl: PharmacyLocation) = viewModelScope.launch(Dispatchers.IO) {
+    fun deletePharLocation(pl: PharmacyLocation) = viewModelScope.launch(Dispatchers.IO) {
         mainRepository.deletePharLocation(pl)
     }
 
     val favoritePharLocations: LiveData<List<PharmacyLocation>> get() = mainRepository.getFavoritePharLocations()
 
-//    private val _stationListLiveData: MutableLiveData<List<Station>> = MutableLiveData()
-//    val stationListLiveData: LiveData<List<Station>> get() = _stationListLiveData
-//
-//    fun getDongBySearch(stationName: String) {
-//        val call = mainRepository.getDongBySearch(stationName)
-//
-//        call.enqueue(
-//            object: Callback<List<Station>>{
-//                override fun onResponse(
-//                    call: Call<List<Station>>,
-//                    response: Response<List<Station>>
-//                ) {
-//                    if(response.isSuccessful) {
-//                        response.body()?.let {
-//                            _stationListLiveData.postValue(it)
-//                        }
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-//                    Log.d("TAG","List<Station> Callback.onFailure called")
-//                }
-//
-//            }
-//        )
-//    }
+    private val plIndexLiveData = MutableLiveData<Int>()
+    var plLiveData: LiveData<PharmacyLocation?> =
+        Transformations.switchMap(plIndexLiveData) {
+            Log.d("TAG", "찍힌거2: $it")
+            mainRepository.getPharLocation(it)
+        }
+
+    fun loadPL(pk: Int) {
+        Log.d("TAG", "찍힌거3: $pk")
+        plIndexLiveData.value = pk
+    }
+
 }

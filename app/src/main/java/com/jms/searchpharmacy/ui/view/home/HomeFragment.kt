@@ -36,20 +36,20 @@ import java.util.jar.Manifest
 
 class HomeFragment : Fragment() {
 
-    private var _binding : FragmentHomeBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel : MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
 
-    private inner class Top5Adapter(val PLList: List<PharmacyLocation>)
-        : RecyclerView.Adapter<Top5Adapter.Top5ViewHolder>() {
+    private inner class Top5Adapter(val PLList: List<PharmacyLocation>) :
+        RecyclerView.Adapter<Top5Adapter.Top5ViewHolder>() {
 
-        inner class Top5ViewHolder(val itemBinding: ItemBestSearchBinding)
-            : RecyclerView.ViewHolder(itemBinding.root) {
+        inner class Top5ViewHolder(val itemBinding: ItemBestSearchBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
 
-            fun bind(pl: PharmacyLocation){
+            fun bind(pl: PharmacyLocation) {
                 itemBinding.apply {
                     Glide.with(itemView)
                         .load(R.drawable.ic_best)
@@ -57,24 +57,32 @@ class HomeFragment : Fragment() {
 
 
                     convCntTv.text = getString(R.string.conv_cnt, pl.convenience_count.toString())
-                    convPerPharTv.text = getString(R.string.conv_per_phar,
-                        String.format("%.2f",pl.convenience_per_pharmacy))
+                    convPerPharTv.text = getString(
+                        R.string.conv_per_phar,
+                        String.format("%.2f", pl.convenience_per_pharmacy)
+                    )
                     docCntTv.text = getString(R.string.doc_cnt, pl.doctorcount.toString())
-                    docPerPharTv.text = getString(R.string.doc_per_phar,
-                        String.format("%.2f",pl.doctor_per_pharmacy))
+                    docPerPharTv.text = getString(
+                        R.string.doc_per_phar,
+                        String.format("%.2f", pl.doctor_per_pharmacy)
+                    )
                     dongTv.text = pl.dong
                     hospCntTv.text = getString(R.string.hosp_cnt, pl.hospital_count.toString())
-                    hospPerPharTv.text = getString(R.string.hosp_per_phar,
-                        String.format("%.2f",pl.hospital_per_pharmacy))
-                    loadAddrTv.text = getString(R.string.load_addr,pl.load_address)
+                    hospPerPharTv.text = getString(
+                        R.string.hosp_per_phar,
+                        String.format("%.2f", pl.hospital_per_pharmacy)
+                    )
+                    loadAddrTv.text = getString(R.string.load_addr, pl.load_address)
                     pharCntTv.text = getString(R.string.phar_cnt, pl.pharmacy_count.toString())
 
                 }
-                itemView.setOnClickListener{
-                    viewModel.registerPL(pl)
-                    val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(pl.index)
+
+                itemBinding.moveThisBtn.setOnClickListener {
+
+                    val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(pl)
                     findNavController().navigate(action)
                 }
+
             }
 
         }
@@ -105,20 +113,15 @@ class HomeFragment : Fragment() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.homeTextInfoSingleLine.isSelected = true
-        binding.searchSubway.setOnClickListener{
+        binding.searchSubway.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSelectSubwayFragment()
             findNavController().navigate(action)
         }
-        binding.searchAddr.setOnClickListener{
+        binding.searchAddr.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToBriefFragment(null)
             findNavController().navigate(action)
         }
@@ -129,7 +132,7 @@ class HomeFragment : Fragment() {
                 .into(it)
         }
 
-        binding.searchMyPlace.setOnClickListener{
+        binding.searchMyPlace.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -144,7 +147,6 @@ class HomeFragment : Fragment() {
                     requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
 
-
                 val currentLocation: Location? =
                     locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                         ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
@@ -155,8 +157,9 @@ class HomeFragment : Fragment() {
                     onCheckInSeoul(currentLocation)
                 }
 
-                if(currentLocation == null) {
-                    Toast.makeText(requireContext(), "GPS, 인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show()
+                if (currentLocation == null) {
+                    Toast.makeText(requireContext(), "GPS, 인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
             }
@@ -174,24 +177,49 @@ class HomeFragment : Fragment() {
     private fun onCheckInSeoul(currentLocation: Location) {
         viewModel.convertCoordsToAddr(LatLng(currentLocation))
         viewModel.regionNameLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(),it,Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 
 
     private fun onCheckPermission() {
-        if(ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            || ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            || ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            if(ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
                 Toast.makeText(requireContext(), "위치 권한을 허용해야 사용 가능합니다", Toast.LENGTH_SHORT).show()
 
-                ActivityCompat.requestPermissions(requireActivity(),arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION),PERMISSION_REQUEST_CODE)
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    PERMISSION_REQUEST_CODE
+                )
 
 
             } else {
 
-                ActivityCompat.requestPermissions(requireActivity(),arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION),PERMISSION_REQUEST_CODE)
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    PERMISSION_REQUEST_CODE
+                )
 
             }
 
@@ -205,15 +233,15 @@ class HomeFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
+        when (requestCode) {
             PERMISSION_REQUEST_CODE -> {
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(requireContext(), "위치 권한이 설정되었습니다", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), "위치 권한이 취소되었습니다", Toast.LENGTH_SHORT).show()
                 }
             }
-            else -> { }
+            else -> {}
         }
 
     }

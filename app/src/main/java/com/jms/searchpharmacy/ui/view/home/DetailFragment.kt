@@ -35,19 +35,20 @@ import kotlin.properties.Delegates
 
 class DetailFragment : Fragment(), OnMapReadyCallback {
 
-    private var _binding : FragmentDetailBinding? = null
+    private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
     private val args by navArgs<DetailFragmentArgs>()
 
-    private val viewModel : MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
-    private lateinit var currentPL : PharmacyLocation
+    private lateinit var currentPL: PharmacyLocation
 
-    private val detailFragmentList = arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
+    private val detailFragmentList =
+        arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
 
-    private val isExpandedLiveData : MutableLiveData<Boolean> = MutableLiveData(true)
+    private val isExpandedLiveData: MutableLiveData<Boolean> = MutableLiveData(true)
 
     private var isExpanded: Boolean = true
 
@@ -56,8 +57,9 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var naverMap: NaverMap
 
-    private val isFavorite get() = viewModel.isFavoritePL.value ?: false
+    //private val isFavorite get() = viewModel.isFavoritePL.value ?: false
 
+    private var isFavoritePL: Boolean = false
     private var dbDelayTime = System.currentTimeMillis()
 
     override fun onCreateView(
@@ -80,6 +82,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         }
 
+        //
 
 
         return binding.root
@@ -87,9 +90,9 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     private fun loadDetailList() {
         viewModel.apply {
-            fetchConvList(args.primaryKey)
-            fetchHospList(args.primaryKey)
-            fetchPharList(args.primaryKey)
+            fetchConvList(args.pharmacyLocation.index)
+            fetchHospList(args.pharmacyLocation.index)
+            fetchPharList(args.pharmacyLocation.index)
         }
 
     }
@@ -101,19 +104,31 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         loadDetailList()
 
 
-        viewModel.curretnPL.observe(viewLifecycleOwner) {
-            currentPL = it
-            viewModel.checkPLExists(it)
-        }
-        viewModel.isFavoritePL.observe(viewLifecycleOwner) {
-            if(it) {
-                binding.addFavoriteBtn.setColorFilter(resources.getColor(android.R.color.transparent))
+        viewModel.loadPL(args.pharmacyLocation.index)
+        viewModel.plLiveData.observe(viewLifecycleOwner) {
+            isFavoritePL = it != null
+            if (isFavoritePL) {
+                binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.pink))
             } else {
                 binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.grey))
             }
         }
 
-        binding.viewPager2WithMap.adapter = object: FragmentStateAdapter(this){
+        binding.addFavoriteBtn.setOnClickListener {
+
+            if (isFavoritePL) {
+                //삭제
+                viewModel.deletePharLocation(args.pharmacyLocation)
+                Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
+            } else {
+                //추가
+                viewModel.savePharLocation(args.pharmacyLocation)
+                Toast.makeText(requireContext(), "추가", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        binding.viewPager2WithMap.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = detailFragmentList.size
 
             override fun createFragment(position: Int): Fragment {
@@ -121,17 +136,17 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        TabLayoutMediator(binding.tabLayoutInDetail,binding.viewPager2WithMap) { tab, position ->
+        TabLayoutMediator(binding.tabLayoutInDetail, binding.viewPager2WithMap) { tab, position ->
 
-            when(position) {
+            when (position) {
                 0 -> { //병원정보 디테일
-                    tab.text="병원"
+                    tab.text = "병원"
                 }
                 1 -> { //약국정보 디테일
-                    tab.text="약국"
+                    tab.text = "약국"
                 }
                 2 -> { //편의점 정보 디테일
-                    tab.text="편의점"
+                    tab.text = "편의점"
                 }
             }
 
@@ -140,26 +155,6 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         binding.toggleButton.setOnClickListener {
             isExpandedLiveData.postValue(!isExpandedLiveData.value!!)
 
-        }
-
-        binding.addFavoriteBtn.setOnClickListener {
-            // 디비 작업 딜레이 1초
-            if(System.currentTimeMillis()-dbDelayTime >= 1000) {
-                Log.d("TAG","확인: $isFavorite")
-                if (isFavorite) {
-                    // 삭제
-                    viewModel.deletePharLocationRegFavorite(currentPL)
-                    Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
-                    binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.grey))
-
-                } else {
-                    // 추가
-                    viewModel.savePharLocationRegFavorite(currentPL)
-                    Toast.makeText(requireContext(), "저장", Toast.LENGTH_SHORT).show()
-                    binding.addFavoriteBtn.setColorFilter(resources.getColor(android.R.color.transparent))
-                }
-
-            }
         }
 
 
@@ -172,21 +167,21 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         paddingHeight = binding.toggleButton.height + 50
         binding.toggleButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
         binding.toggleButton.setBackgroundResource(android.R.color.transparent)
-        naverMap.setContentPadding(0,0,0,binding.contentLayoutInDetail.height)
+        naverMap.setContentPadding(0, 0, 0, binding.contentLayoutInDetail.height)
 
         binding.toggleButton.setOnClickListener {
 
 
             isExpanded = !isExpanded
             binding.viewPager2WithMap.isVisible = isExpanded
-            if(isExpanded) {
+            if (isExpanded) {
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
-                naverMap.setContentPadding(0,0,0,paddingHeightExpanded)
+                naverMap.setContentPadding(0, 0, 0, paddingHeightExpanded)
             } else {
                 binding.toggleButton.setImageResource(android.R.drawable.ic_menu_add)
                 binding.toggleButton.setBackgroundResource(android.R.color.transparent)
-                naverMap.setContentPadding(0,0,0,paddingHeight)
+                naverMap.setContentPadding(0, 0, 0, paddingHeight)
             }
         }
 
@@ -194,7 +189,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        this.naverMap.uiSettings.apply{
+        this.naverMap.uiSettings.apply {
             isLocationButtonEnabled = true
             isCompassEnabled = true
         }
@@ -202,33 +197,33 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         setupUISettings()
 
 
-        viewModel.searchPhar.observe(viewLifecycleOwner){ response->
+        viewModel.searchPhar.observe(viewLifecycleOwner) { response ->
             val addresses: List<Addresse>? = response?.addresses
 
             addresses?.let {
 
-                    for(i in it.indices) {
-                        val markerPhar = Marker()
-                        markerPhar.apply {
-                            icon = OverlayImage.fromResource(R.drawable.ic_phar_marker)
-                            width= 100
-                            height = 100
-                            position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
-                            map = naverMap
-                        }
+                for (i in it.indices) {
+                    val markerPhar = Marker()
+                    markerPhar.apply {
+                        icon = OverlayImage.fromResource(R.drawable.ic_phar_marker)
+                        width = 100
+                        height = 100
+                        position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
+                        map = naverMap
                     }
+                }
 
             }
         }
-        viewModel.searchConv.observe(viewLifecycleOwner){ response->
+        viewModel.searchConv.observe(viewLifecycleOwner) { response ->
             val addresses: List<Addresse>? = response?.addresses
 
             addresses?.let {
-                for(i in it.indices) {
+                for (i in it.indices) {
                     val markerConv = Marker()
                     markerConv.apply {
                         icon = OverlayImage.fromResource(R.drawable.ic_conv_marker)
-                        width= 100
+                        width = 100
                         height = 100
                         position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
                         map = naverMap
@@ -236,32 +231,35 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
-        viewModel.searchHosp.observe(viewLifecycleOwner){ response->
+        viewModel.searchHosp.observe(viewLifecycleOwner) { response ->
             val addresses: List<Addresse>? = response?.addresses
 
             addresses?.let { list ->
-                    for(i in list.indices) {
-                        val markerHosp = Marker()
-                        markerHosp.apply {
-                            icon = OverlayImage.fromResource(R.drawable.ic_hosp_marker)
-                            width= 100
-                            height = 100
-                            position = LatLng(list[i].y!!.toDouble(), list[i].x!!.toDouble())
-                            map = naverMap
-
-                        }
+                for (i in list.indices) {
+                    val markerHosp = Marker()
+                    markerHosp.apply {
+                        icon = OverlayImage.fromResource(R.drawable.ic_hosp_marker)
+                        width = 100
+                        height = 100
+                        position = LatLng(list[i].y!!.toDouble(), list[i].x!!.toDouble())
+                        map = naverMap
 
                     }
-                list[0].x?.let{
-                    val cameraUpdate = CameraUpdate.scrollTo(LatLng(list[0].y!!.toDouble(), list[0].x!!.toDouble()))
+
+                }
+                list[0].x?.let {
+                    val cameraUpdate = CameraUpdate.scrollTo(
+                        LatLng(
+                            list[0].y!!.toDouble(),
+                            list[0].x!!.toDouble()
+                        )
+                    )
                     naverMap.moveCamera(cameraUpdate)
                 }
 
                 view?.invalidate()
             }
         }
-
-
 
 
     }
@@ -271,7 +269,6 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         super.onDestroyView()
     }
-
 
 
 }

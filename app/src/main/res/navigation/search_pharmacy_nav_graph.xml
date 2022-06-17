@@ -27,8 +27,9 @@
         android:name="com.jms.searchpharmacy.ui.view.home.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
-        <argument android:name="primaryKey"
-            app:argType="integer" />
+        <argument
+            android:name="pharmacyLocation"
+            app:argType="com.jms.searchpharmacy.data.model.server.PharmacyLocation" />
     </fragment>
     <fragment
         android:id="@+id/fragment_home"

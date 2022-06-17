@@ -38,24 +38,22 @@ import retrofit2.Response
 
 class SelectSubwayFragment : Fragment() {
 
-    private var _binding : FragmentSelectSubwayBinding? = null
+    private var _binding: FragmentSelectSubwayBinding? = null
     private val binding get() = _binding!!
     private lateinit var lineList: List<Line>
 
-    private val viewModel : MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
-    //private var selectedDongName: String? = null
 
     private lateinit var alertDialog: AlertDialog
 
-    private inner class DetailNameAdapter(private var stationList: List<Station>)
-        : RecyclerView.Adapter<DetailNameAdapter.DetailNameViewHolder>() {
+    private inner class DetailNameAdapter(private var stationList: List<Station>) :
+        RecyclerView.Adapter<DetailNameAdapter.DetailNameViewHolder>() {
 
-        //private var stationList: List<Station> = stationList
 
-        inner class DetailNameViewHolder(val itemInDetailSubwayBinding: ItemInDetailSubwayBinding)
-            : RecyclerView.ViewHolder(itemInDetailSubwayBinding.root) {
+        inner class DetailNameViewHolder(val itemInDetailSubwayBinding: ItemInDetailSubwayBinding) :
+            RecyclerView.ViewHolder(itemInDetailSubwayBinding.root) {
 
             fun bind(station: Station) {
                 // 역이름 받아서 배치
@@ -86,9 +84,11 @@ class SelectSubwayFragment : Fragment() {
 
 
     }
+
     private fun moveToDetailFragment(dongName: String) {
 
-        val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief(dongName)
+        val action =
+            SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief(dongName)
         findNavController().navigate(action)
     }
 
@@ -99,10 +99,10 @@ class SelectSubwayFragment : Fragment() {
                 call: Call<List<Station>>,
                 response: Response<List<Station>>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     response.body()?.let {
 
-                        if(it.size > 1) {
+                        if (it.size > 1) {
                             // 다이얼로그로 보내기
                             val dialogBinding = DialogSelectDongBinding.inflate(layoutInflater)
 
@@ -118,7 +118,8 @@ class SelectSubwayFragment : Fragment() {
                                 dialogRv.adapter = DialogAdapter(it)
                                 dialogRv.layoutManager =
                                     LinearLayoutManager(requireContext())
-                                dialogRv.addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
+                                dialogRv.addOnItemTouchListener(object :
+                                    RecyclerView.OnItemTouchListener {
                                     override fun onInterceptTouchEvent(
                                         rv: RecyclerView,
                                         e: MotionEvent
@@ -130,12 +131,12 @@ class SelectSubwayFragment : Fragment() {
                                         rv: RecyclerView,
                                         e: MotionEvent
                                     ) {
-                                        when(e.action){
+                                        when (e.action) {
                                             MotionEvent.ACTION_BUTTON_PRESS -> {
                                                 alertDialog.dismiss()
 
                                             }
-                                            else->{}
+                                            else -> {}
                                         }
                                     }
 
@@ -176,13 +177,15 @@ class SelectSubwayFragment : Fragment() {
     }
 
 
-    private inner class DialogAdapter(val stationList: List<Station>): RecyclerView.Adapter<DialogAdapter.DialogViewHolder>(){
+    private inner class DialogAdapter(val stationList: List<Station>) :
+        RecyclerView.Adapter<DialogAdapter.DialogViewHolder>() {
 
-        inner class DialogViewHolder(val itemBinding: DialogItemSelectDongBinding): RecyclerView.ViewHolder(itemBinding.root) {
+        inner class DialogViewHolder(val itemBinding: DialogItemSelectDongBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
             lateinit var dongName: String
 
 
-            fun bind(dongName: String){
+            fun bind(dongName: String) {
                 this.dongName = dongName
                 itemBinding.radioButton.text = this.dongName
                 itemBinding.radioButton.setOnClickListener {
@@ -193,7 +196,10 @@ class SelectSubwayFragment : Fragment() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DialogAdapter.DialogViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): DialogAdapter.DialogViewHolder {
             val binding = DialogItemSelectDongBinding.inflate(layoutInflater, parent, false)
             return DialogViewHolder(binding)
         }
@@ -207,13 +213,13 @@ class SelectSubwayFragment : Fragment() {
         override fun getItemCount(): Int = stationList.size
     }
 
-    private inner class BriefNameAdapter(private val lineList: List<Line>)
-        : RecyclerView.Adapter<BriefNameAdapter.BriefNameViewHolder>() {
+    private inner class BriefNameAdapter(private val lineList: List<Line>) :
+        RecyclerView.Adapter<BriefNameAdapter.BriefNameViewHolder>() {
 
         //private val lineList: List<Line> = lineList
 
-        inner class BriefNameViewHolder(val itemInSelectSubwayBinding: ItemInSelectSubwayBinding)
-            : RecyclerView.ViewHolder(itemInSelectSubwayBinding.root) {
+        inner class BriefNameViewHolder(val itemInSelectSubwayBinding: ItemInSelectSubwayBinding) :
+            RecyclerView.ViewHolder(itemInSelectSubwayBinding.root) {
             //여기서 어답터 지정
             val toggleButton: MutableLiveData<Boolean> = MutableLiveData(false)
             lateinit var line: Line
@@ -221,10 +227,9 @@ class SelectSubwayFragment : Fragment() {
 
             init {
 
-                toggleButton.observe(viewLifecycleOwner){ isClicked ->
+                toggleButton.observe(viewLifecycleOwner) { isClicked ->
                     itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = isClicked
                 }
-
 
 
             }
@@ -244,23 +249,25 @@ class SelectSubwayFragment : Fragment() {
 
             fun setupStationList(line_name: String) {
                 val call = serverApi.getStationByLine(line.name)
-                call.enqueue(object: Callback<List<Station>>{
+                call.enqueue(object : Callback<List<Station>> {
                     override fun onResponse(
                         call: Call<List<Station>>,
                         response: Response<List<Station>>
                     ) {
-                        if(response.isSuccessful) {
+                        if (response.isSuccessful) {
                             response.body()?.let {
                                 stationList = it
-                                itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter = DetailNameAdapter(stationList)
-                                itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager = GridLayoutManager(requireContext(),3)
+                                itemInSelectSubwayBinding.detailOfLineRecyclerView.adapter =
+                                    DetailNameAdapter(stationList)
+                                itemInSelectSubwayBinding.detailOfLineRecyclerView.layoutManager =
+                                    GridLayoutManager(requireContext(), 3)
 
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<List<Station>>, t: Throwable) {
-                        Log.d("TAG","List<Station> Callback.onFailure called")
+                        Log.d("TAG", "List<Station> Callback.onFailure called")
                     }
 
                 })
@@ -302,32 +309,27 @@ class SelectSubwayFragment : Fragment() {
             binding.allLinesRecyclerView.adapter = BriefNameAdapter(lineList)
             binding.allLinesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
-//
-//        viewModel.stationListLiveData.observe(viewLifecycleOwner) {
-//
-//        }
+
         binding.textInputEditText.imeOptions = EditorInfo.IME_ACTION_SEARCH
 
 
-        binding.textInputEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener{
-            override fun onEditorAction(p0: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
-                return when(actionId) {
-                    EditorInfo.IME_ACTION_SEARCH -> {
-                        binding.textInputEditText.text?.let {
-                            if(it.isNotEmpty() && it.matches(stationNamePattern)) {
-                                getDongByStation(it.toString())
-                            }
+        binding.textInputEditText.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    binding.textInputEditText.text?.let {
+                        if (it.isNotEmpty() && it.matches(stationNamePattern)) {
+                            getDongByStation(it.toString())
                         }
-                        true
                     }
-                    else-> {false}
+                    true
                 }
-
+                else -> {
+                    false
+                }
             }
-
-        })
+        }
         binding.textInputEditText.addTextChangedListener(
-            object: TextWatcher {
+            object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 }
@@ -335,10 +337,10 @@ class SelectSubwayFragment : Fragment() {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                     binding.textInputEditText.text?.let {
-                        if(it.isNotEmpty()) {
+                        if (it.isNotEmpty()) {
                             val result = it.matches(stationNamePattern)
-                            if(result) {
-                               //TODO{}
+                            if (result) {
+                                //TODO{}
                             } else {
                                 //에러 띄우기
                                 binding.textInputEditText.setError("'역'으로 끝나야 합니다", null)
@@ -349,7 +351,7 @@ class SelectSubwayFragment : Fragment() {
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    if(!binding.textInputEditText.isFocused) {
+                    if (!binding.textInputEditText.isFocused) {
                         binding.textInputEditText.error = null
                     }
 

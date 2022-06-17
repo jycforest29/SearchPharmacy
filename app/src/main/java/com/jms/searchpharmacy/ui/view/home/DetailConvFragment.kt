@@ -22,26 +22,27 @@ import kotlinx.coroutines.launch
 
 
 class DetailConvFragment : Fragment() {
-    private var _binding : FragmentDetailConvBinding? = null
+    private var _binding: FragmentDetailConvBinding? = null
     private val binding get() = _binding!!
-    private val viewModel : MainViewModel by lazy {
+    private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
-    private inner class DetailConvAdapter(val convList: List<Convenience>)
-        : RecyclerView.Adapter<DetailConvAdapter.DetailConvViewHolder>() {
 
-            inner class DetailConvViewHolder(val itemBinding: ItemDetailConvBinding)
-                : RecyclerView.ViewHolder(itemBinding.root) {
+    private inner class DetailConvAdapter(val convList: List<Convenience>) :
+        RecyclerView.Adapter<DetailConvAdapter.DetailConvViewHolder>() {
 
-                    fun bind(conv: Convenience){
-                        itemBinding.apply {
-                            convAddr.text = conv.address
-                            convDate.text = conv.startdate
-                            convName.text = conv.name
-                        }
-                    }
+        inner class DetailConvViewHolder(val itemBinding: ItemDetailConvBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
 
+            fun bind(conv: Convenience) {
+                itemBinding.apply {
+                    convAddr.text = conv.address
+                    convDate.text = conv.startdate
+                    convName.text = conv.name
+                }
             }
+
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailConvViewHolder {
             val itemBinding = ItemDetailConvBinding.inflate(layoutInflater, parent, false)
@@ -57,6 +58,7 @@ class DetailConvFragment : Fragment() {
 
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,8 +73,7 @@ class DetailConvFragment : Fragment() {
         viewModel.fetchedConvList.observe(viewLifecycleOwner) {
             binding.convRv.adapter = DetailConvAdapter(it)
             binding.convRv.layoutManager = LinearLayoutManager(requireContext())
-            Log.d("TAG","편의점 사이즈 ${it.size}")
-            for(i in 0 until if(it.size > 5) 5 else it.size) {
+            for (i in 0 until if (it.size > 5) 5 else it.size) {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.searchConvLoc(it[i].address)
                 }

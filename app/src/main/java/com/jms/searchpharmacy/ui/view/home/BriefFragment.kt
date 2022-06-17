@@ -58,9 +58,9 @@ class BriefFragment : Fragment() {
                 }
 
                 itemView.setOnClickListener {
-                    viewModel.registerPL(pl)
+
                     val action =
-                        BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.index)
+                        BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl)
                     findNavController().navigate(action)
                 }
 

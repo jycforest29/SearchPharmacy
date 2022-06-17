@@ -9,7 +9,7 @@ import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
-    private var _binding : FragmentSettingsBinding? = null
+    private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(

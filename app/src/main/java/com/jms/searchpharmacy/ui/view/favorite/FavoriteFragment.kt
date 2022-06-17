@@ -21,13 +21,13 @@ import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 
 class FavoriteFragment : Fragment() {
 
-    private var _binding : FragmentFavoriteBinding? = null
+    private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MainViewModel
     private lateinit var favoriteAdapter: FavoriteAdapter
 
-    private val favoriteListItemHelper = object: ItemTouchHelper.Callback() {
+    private val favoriteListItemHelper = object : ItemTouchHelper.Callback() {
         override fun getMovementFlags(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder
@@ -47,10 +47,12 @@ class FavoriteFragment : Fragment() {
             (viewHolder as? FavoriteAdapter.FavoriteViewHolder)?.let {
                 val position = it.bindingAdapterPosition
                 val pl = favoriteAdapter.currentList[position]
-                viewModel.deletePharLocationRegFavorite(pl)
-                Snackbar.make(requireView(),"찜 목록에서 제거되었습니다", Snackbar.LENGTH_SHORT).apply {
+                //viewModel.deletePharLocationRegFavorite(pl)
+                viewModel.deletePharLocation(pl)
+                Snackbar.make(requireView(), "찜 목록에서 제거되었습니다", Snackbar.LENGTH_SHORT).apply {
                     setAction("취소") {
-                        viewModel.savePharLocationRegFavorite(pl)
+                        //viewModel.savePharLocationRegFavorite(pl)
+                        viewModel.savePharLocation(pl)
                     }
                 }.show()
             }
@@ -66,58 +68,78 @@ class FavoriteFragment : Fragment() {
 
     }
 
-    private inner class FavoriteAdapter()
-        : ListAdapter<PharmacyLocation, FavoriteAdapter.FavoriteViewHolder>(PharDiffCallback) {
+    private inner class FavoriteAdapter() :
+        ListAdapter<PharmacyLocation, FavoriteAdapter.FavoriteViewHolder>(PharDiffCallback) {
 
-            inner class FavoriteViewHolder(val itemBinding: ItemFavoritePlBinding)
-                : RecyclerView.ViewHolder(itemBinding.root) {
-                    //lateinit var pl: PharmacyLocation
+        inner class FavoriteViewHolder(val itemBinding: ItemFavoritePlBinding) :
+            RecyclerView.ViewHolder(itemBinding.root) {
+            //lateinit var pl: PharmacyLocation
 
-                    fun bind(pl: PharmacyLocation) {
-                       //this.pl = pl
-                        itemBinding.apply {
-                            convCntTv.text = getString(R.string.conv_cnt, pl.convenience_count.toString())
-                            convPerPharTv.text = getString(R.string.conv_per_phar,
-                                String.format("%.2f",pl.convenience_per_pharmacy))
-                            docCntTv.text = getString(R.string.doc_cnt, pl.doctorcount.toString())
-                            docPerPharTv.text = getString(R.string.doc_per_phar,
-                                String.format("%.2f",pl.doctor_per_pharmacy))
-                            dongTv.text = pl.dong
-                            hospCntTv.text = getString(R.string.hosp_cnt, pl.hospital_count.toString())
-                            hospPerPharTv.text = getString(R.string.hosp_per_phar,
-                                String.format("%.2f",pl.hospital_per_pharmacy))
-                            loadAddrTv.text = getString(R.string.load_addr,pl.load_address)
-                            pharCntTv.text = getString(R.string.phar_cnt, pl.pharmacy_count.toString())
+            fun bind(pl: PharmacyLocation) {
+                //this.pl = pl
+                itemBinding.apply {
+                    convCntTv.text = getString(R.string.conv_cnt, pl.convenience_count.toString())
+                    convPerPharTv.text = getString(
+                        R.string.conv_per_phar,
+                        String.format("%.2f", pl.convenience_per_pharmacy)
+                    )
+                    docCntTv.text = getString(R.string.doc_cnt, pl.doctorcount.toString())
+                    docPerPharTv.text = getString(
+                        R.string.doc_per_phar,
+                        String.format("%.2f", pl.doctor_per_pharmacy)
+                    )
+                    dongTv.text = pl.dong
+                    hospCntTv.text = getString(R.string.hosp_cnt, pl.hospital_count.toString())
+                    hospPerPharTv.text = getString(
+                        R.string.hosp_per_phar,
+                        String.format("%.2f", pl.hospital_per_pharmacy)
+                    )
+                    loadAddrTv.text = getString(R.string.load_addr, pl.load_address)
+                    pharCntTv.text = getString(R.string.phar_cnt, pl.pharmacy_count.toString())
 
 
-                            //Detail 이동
-                            moveThisBtn.setOnClickListener {
-                                val action = FavoriteFragmentDirections.actionFragmentFavoriteToFragmentDetail(pl.index)
-                                findNavController().navigate(action)
-                            }
+                    //Detail 이동
+                    moveThisBtn.setOnClickListener {
+                        val action =
+                            FavoriteFragmentDirections.actionFragmentFavoriteToFragmentDetail(pl)
+                        findNavController().navigate(action)
+                    }
 
-                            shareBtn.setOnClickListener {
-                                Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, getString(R.string.send_pharLocation
-                                        ,pl.dong
-                                        ,getString(R.string.load_addr,pl.load_address)
-                                        ,getString(R.string.hosp_cnt, pl.hospital_count.toString())
-                                        ,getString(R.string.phar_cnt, pl.pharmacy_count.toString())
-                                        ,getString(R.string.doc_cnt, pl.doctorcount.toString())
-                                        ,getString(R.string.conv_cnt, pl.convenience_count.toString())
-                                        ,getString(R.string.hosp_per_phar, String.format("%.2f",pl.hospital_per_pharmacy))
-                                        ,getString(R.string.doc_per_phar, String.format("%.2f",pl.doctor_per_pharmacy))
-                                        ,getString(R.string.conv_per_phar, String.format("%.2f",pl.convenience_per_pharmacy))
-                                    ))
-                                }.also{ intent->
-                                    val chooserIntent = Intent.createChooser(intent, getString(R.string.send_title) )
-                                    startActivity(chooserIntent)
-                                }
-                            }
+                    shareBtn.setOnClickListener {
+                        Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(
+                                Intent.EXTRA_TEXT, getString(
+                                    R.string.send_pharLocation,
+                                    pl.dong,
+                                    getString(R.string.load_addr, pl.load_address),
+                                    getString(R.string.hosp_cnt, pl.hospital_count.toString()),
+                                    getString(R.string.phar_cnt, pl.pharmacy_count.toString()),
+                                    getString(R.string.doc_cnt, pl.doctorcount.toString()),
+                                    getString(R.string.conv_cnt, pl.convenience_count.toString()),
+                                    getString(
+                                        R.string.hosp_per_phar,
+                                        String.format("%.2f", pl.hospital_per_pharmacy)
+                                    ),
+                                    getString(
+                                        R.string.doc_per_phar,
+                                        String.format("%.2f", pl.doctor_per_pharmacy)
+                                    ),
+                                    getString(
+                                        R.string.conv_per_phar,
+                                        String.format("%.2f", pl.convenience_per_pharmacy)
+                                    )
+                                )
+                            )
+                        }.also { intent ->
+                            val chooserIntent =
+                                Intent.createChooser(intent, getString(R.string.send_title))
+                            startActivity(chooserIntent)
                         }
                     }
+                }
             }
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
             val itemBinding = ItemFavoritePlBinding.inflate(layoutInflater, parent, false)
@@ -150,7 +172,7 @@ class FavoriteFragment : Fragment() {
         binding.favoriteRv.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.favoritePharLocations.observe(viewLifecycleOwner) {
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 favoriteAdapter.submitList(it)
                 binding.noItemNotice.isVisible = false
             } else {
@@ -160,6 +182,7 @@ class FavoriteFragment : Fragment() {
 
         }
     }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

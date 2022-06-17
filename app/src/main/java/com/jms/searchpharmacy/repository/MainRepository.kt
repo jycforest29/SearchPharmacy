@@ -1,6 +1,7 @@
 package com.jms.searchpharmacy.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.data.api.RetrofitInstance.naverMapApi
 
@@ -42,9 +43,10 @@ class MainRepository(private val db: SearchPharDatabase) {
         return db.searchPharDao().getFavoritePharLocation()
     }
 
-    fun getPharLocation(index: Int): LiveData<PharmacyLocation> {
+    fun getPharLocation(index: Int): LiveData<PharmacyLocation?> {
         return db.searchPharDao().getPharLocation(index)
     }
+
 
     fun fetchLines(): Call<List<Line>> {
         return serverApi.lines
