@@ -1,10 +1,12 @@
 package com.jms.searchpharmacy.ui.view.home
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,7 +22,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentHomeBinding
@@ -42,6 +45,7 @@ class HomeFragment : Fragment() {
     private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
+
 
     private inner class Top5Adapter(val PLList: List<PharmacyLocation>) :
         RecyclerView.Adapter<Top5Adapter.Top5ViewHolder>() {
@@ -143,27 +147,31 @@ class HomeFragment : Fragment() {
             ) {
                 onCheckPermission()
             } else {
-                locationManager =
-                    requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//                locationManager =
+//                    requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//
 
-
-                val currentLocation: Location? =
-                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                        ?: FusedLocationSource(this, PERMISSION_REQUEST_CODE).lastLocation
+                val currentLocation: Location? = (activity as MainActivity).myLocation
+//                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+//                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+//                        ?: FusedLocationSource(this, PERMISSION_REQUEST_CODE).lastLocation
 
 
                 currentLocation?.let {
-                    onCheckInSeoul(currentLocation)
+                    (activity as MainActivity).onCheckInSeoul(currentLocation)
                 }
 
                 if (currentLocation == null) {
-                    Toast.makeText(requireContext(), "GPS, 인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT)
+                    AlertDialog.Builder(requireContext()).setTitle("기록된 마지막 위치 없음")
+                        .setMessage("현재 GPS 로 기록된 마지막 위치가 없습니다\n잠시 후에 다시 시도해주세요")
+                        .setPositiveButton("확인", null)
                         .show()
                 }
 
             }
         }
+
+
 
         viewModel.fetchedPLsTop5List.observe(viewLifecycleOwner) {
             binding.top5RecyclerView.adapter = Top5Adapter(it)
@@ -173,13 +181,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    //현재 위치가 서울인지 파악
-    private fun onCheckInSeoul(currentLocation: Location) {
-        viewModel.convertCoordsToAddr(LatLng(currentLocation))
-        viewModel.regionNameLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
-    }
+
 
 
     private fun onCheckPermission() {
@@ -226,6 +228,7 @@ class HomeFragment : Fragment() {
         }
 
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

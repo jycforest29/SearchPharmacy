@@ -1,5 +1,8 @@
 package com.jms.searchpharmacy.ui.view.home
 
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
@@ -43,7 +46,6 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
     private val viewModel: MainViewModel by lazy {
         (activity as MainActivity).mainViewModel
     }
-    private lateinit var currentPL: PharmacyLocation
 
     private val detailFragmentList =
         arrayOf(DetailHospFragment(), DetailPharFragment(), DetailConvFragment())
@@ -57,10 +59,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var naverMap: NaverMap
 
-    //private val isFavorite get() = viewModel.isFavoritePL.value ?: false
-
     private var isFavoritePL: Boolean = false
-    private var dbDelayTime = System.currentTimeMillis()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,7 +81,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         }
 
-        //
+
 
 
         return binding.root
@@ -108,9 +107,12 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
         viewModel.plLiveData.observe(viewLifecycleOwner) {
             isFavoritePL = it != null
             if (isFavoritePL) {
-                binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.pink))
+                binding.addFavoriteBtn.setColorFilter(android.R.color.transparent)
             } else {
-                binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.grey))
+                val matrix = ColorMatrix()
+                    matrix.setSaturation(0F)
+                val filter = ColorMatrixColorFilter(matrix)
+                binding.addFavoriteBtn.colorFilter = filter
             }
         }
 

@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import com.jms.a20220602_navermap.data.model.GeoInfo
 import com.jms.searchpharmacy.data.model.reversegeo.Coords
+import com.jms.searchpharmacy.data.model.reversegeo.Region
 import com.jms.searchpharmacy.data.model.server.*
 import retrofit2.Callback
 
@@ -21,16 +22,17 @@ class MainViewModel(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    private val _regionNameLiveData: MutableLiveData<String> = MutableLiveData()
-    val regionNameLiveData: LiveData<String> get() = _regionNameLiveData
+    private val _regionLiveData: MutableLiveData<Region?> = MutableLiveData()
+    val regionLiveData: LiveData<Region?> get() = _regionLiveData
 
     fun convertCoordsToAddr(latLng: LatLng) = viewModelScope.launch(Dispatchers.IO) {
         val response = mainRepository.convertCoordsToAddr("${latLng.longitude},${latLng.latitude}")
         if (response.isSuccessful) {
             response.body()?.let { body ->
                 if (body.results?.size!! > 0) {
-                    val regionName = body.results[0].region!!.area1!!.name
-                    _regionNameLiveData.postValue(regionName)
+
+                    val region = body.results[0].region
+                    _regionLiveData.postValue(region)
                 }
 
             }

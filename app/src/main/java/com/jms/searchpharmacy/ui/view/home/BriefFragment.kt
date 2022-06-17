@@ -102,13 +102,20 @@ class BriefFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.textInputEditText.setText(args.dongName)
 
+
         binding.floatingActionButton.setOnClickListener {
-//            val action = BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl.roadNameAddr)
-//            findNavController().navigate(action)
+            val act = activity as MainActivity
+            act.myLocation?.let {
+                act.onCheckInSeoul(it)
+            }
         }
+
+        if(args.dongName.isNullOrEmpty()) {
+            binding.briefInfoRecyclerView.adapter = BriefAdapter(emptyList())
+            binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
+
         viewModel.fetchedPLs.observe(viewLifecycleOwner) {
-
-
             binding.briefInfoRecyclerView.adapter = BriefAdapter(it)
             binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
