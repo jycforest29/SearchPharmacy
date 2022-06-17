@@ -3,59 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#6E6E6E"
 
     >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+
 
         >
         <TextView
             android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
+            android:layout_weight="6"
             android:text="도로명주소"
-            android:textColor="@color/white"
+            android:textColor="@color/pink"
+            android:textSize="20sp"
 
             />
         <TextView
             android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:text="병원"
-            android:textColor="@color/white"
-
+            android:textColor="@color/pink"
+            android:textSize="20sp"
             />
         <TextView
             android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:text="약국"
-            android:textColor="@color/white"
-
+            android:textColor="@color/pink"
+            android:textSize="20sp"
             />
         <TextView
             android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:text="병원/약국"
-            android:textColor="@color/white"
-
+            android:textColor="@color/pink"
+            android:textSize="20sp"
             />
         <TextView
             android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:text="편의점 수"
-            android:textColor="@color/white"
-
+            android:text="편의점"
+            android:textColor="@color/pink"
+            android:textSize="20sp"
             />
 
     </LinearLayout>
@@ -64,6 +64,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
+        android:background="@color/dimPink" />
 
 </LinearLayout>

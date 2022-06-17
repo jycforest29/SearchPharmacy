@@ -12,14 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#6E6E6E"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         >
         <TextView
             android:layout_width="0dp"
             android:layout_weight="4"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/white"
+
             android:text="약국명"
             />
 
@@ -28,7 +29,7 @@
             android:layout_weight="6"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/white"
+
             android:text="주소"
             />
         <TextView
@@ -36,12 +37,15 @@
             android:layout_weight="4"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/white"
+
             android:text="개설일자"
             />
 
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dimPink"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/phar_rv"
         android:layout_width="match_parent"

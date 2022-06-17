@@ -109,7 +109,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             if(it) {
                 binding.addFavoriteBtn.setColorFilter(resources.getColor(android.R.color.transparent))
             } else {
-                binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.lightGrey))
+                binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.grey))
             }
         }
 
@@ -150,7 +150,7 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                     // 삭제
                     viewModel.deletePharLocationRegFavorite(currentPL)
                     Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
-                    binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.lightGrey))
+                    binding.addFavoriteBtn.setColorFilter(resources.getColor(R.color.grey))
 
                 } else {
                     // 추가

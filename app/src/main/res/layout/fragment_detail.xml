@@ -59,6 +59,7 @@
             android:background="@drawable/tab_layout_bg"
             app:tabIndicatorHeight="0dp"
             android:padding="5dp"
+            app:tabSelectedTextColor="@color/pink"
             app:tabGravity="start"
             >
             <com.google.android.material.tabs.TabItem

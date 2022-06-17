@@ -250,6 +250,7 @@ class MainViewModel(
 
     fun registerPL(pl: PharmacyLocation) {
         _currentPL.postValue(pl)
+
     }
 
     private fun getPharLocation(pl: PharmacyLocation) {

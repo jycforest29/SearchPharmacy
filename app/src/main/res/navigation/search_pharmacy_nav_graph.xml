@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_brief" >
         <action
             android:id="@+id/action_fragment_brief_to_fragment_detail"
-            app:destination="@id/fragment_detail" />
+            app:destination="@id/fragment_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <argument
             android:name="dongName"
             app:argType="string"
@@ -33,19 +37,39 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_selectSubwayFragment"
-            app:destination="@id/fragment_select_subway" />
+            app:destination="@id/fragment_select_subway"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
-            app:destination="@id/fragment_detail" />
+            app:destination="@id/fragment_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_homeFragment_to_briefFragment"
-            app:destination="@id/fragment_brief" />
+            app:destination="@id/fragment_brief"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_fragment_home_to_fragment_favorite"
-            app:destination="@id/fragment_favorite" />
+            app:destination="@id/fragment_favorite"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
         <action
             android:id="@+id/action_fragment_home_to_fragment_settings"
-            app:destination="@id/fragment_settings" />
+            app:destination="@id/fragment_settings"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/fragment_select_subway"
@@ -54,7 +78,11 @@
         tools:layout="@layout/fragment_select_subway" >
         <action
             android:id="@+id/action_fragment_select_subway_to_fragment_brief"
-            app:destination="@id/fragment_brief" />
+            app:destination="@id/fragment_brief"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/fragment_favorite"
@@ -63,11 +91,23 @@
         tools:layout="@layout/fragment_favorite" >
         <action
             android:id="@+id/action_fragment_favorite_to_fragment_detail"
-            app:destination="@id/fragment_detail" />
+            app:destination="@id/fragment_detail"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment
         android:id="@+id/fragment_settings"
         android:name="com.jms.searchpharmacy.ui.view.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_fragment_settings_to_fragment_home"
+            app:destination="@id/fragment_home"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
 </navigation>
