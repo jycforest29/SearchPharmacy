@@ -131,8 +131,9 @@ class BriefFragment : Fragment() {
             override fun onEditorAction(p0: TextView?, actionId: Int, p2: KeyEvent?): Boolean {
                 return when (actionId) {
                     EditorInfo.IME_ACTION_SEARCH -> {
+
                         binding.textInputEditText.text?.let {
-                            Log.d("TAG","동검색: $it")
+
                             if (it.isNotEmpty() && it.matches(Constants.dongNamePattern)) {
                                 viewModel.fetchPLs(it.toString())
                             } else {
@@ -168,8 +169,10 @@ class BriefFragment : Fragment() {
                                 //TODO{}
                             } else {
                                 //에러 띄우기
-                                binding.textInputEditText.setError("'동'으로 끝나야 합니다", null)
+                                binding.textInputLayout.error = "'동'으로 끝나야 합니다 ex) 역삼동"
+
                             }
+                            Log.d("TAG","tit: $it")
                         }
                     }
 
@@ -177,7 +180,7 @@ class BriefFragment : Fragment() {
 
                 override fun afterTextChanged(p0: Editable?) {
                     if (!binding.textInputEditText.isFocused) {
-                        binding.textInputEditText.error = null
+                        binding.textInputLayout.error = null
                     }
 
                 }

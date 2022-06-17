@@ -18,6 +18,11 @@
         app:endIconCheckable="true"
         app:endIconDrawable="@android:drawable/ic_menu_close_clear_cancel"
         app:endIconMode="clear_text"
+        app:boxStrokeErrorColor="@color/dimPink"
+        app:errorIconDrawable="@null"
+        app:errorTextColor="@color/grey"
+        app:hintTextColor="@color/pink"
+
         app:errorEnabled="true"
         app:boxStrokeColor="@drawable/tit_box_color"
         app:layout_constraintEnd_toEndOf="parent"

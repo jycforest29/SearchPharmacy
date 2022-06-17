@@ -343,7 +343,8 @@ class SelectSubwayFragment : Fragment() {
                                 //TODO{}
                             } else {
                                 //에러 띄우기
-                                binding.textInputEditText.setError("'역'으로 끝나야 합니다", null)
+                                binding.textInputLayout.error = "'역'으로 끝나야 합니다 ex) 가락시장역"
+
                             }
                         }
                     }
@@ -352,7 +353,7 @@ class SelectSubwayFragment : Fragment() {
 
                 override fun afterTextChanged(p0: Editable?) {
                     if (!binding.textInputEditText.isFocused) {
-                        binding.textInputEditText.error = null
+                        binding.textInputLayout.error = null
                     }
 
                 }
