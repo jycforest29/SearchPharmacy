@@ -19,6 +19,7 @@
         app:endIconDrawable="@android:drawable/ic_menu_close_clear_cancel"
         app:endIconMode="clear_text"
         app:errorEnabled="true"
+        app:boxStrokeColor="@drawable/tit_box_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

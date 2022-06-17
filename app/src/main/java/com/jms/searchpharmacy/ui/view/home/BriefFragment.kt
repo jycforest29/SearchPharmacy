@@ -132,6 +132,7 @@ class BriefFragment : Fragment() {
                 return when (actionId) {
                     EditorInfo.IME_ACTION_SEARCH -> {
                         binding.textInputEditText.text?.let {
+                            Log.d("TAG","동검색: $it")
                             if (it.isNotEmpty() && it.matches(Constants.dongNamePattern)) {
                                 viewModel.fetchPLs(it.toString())
                             } else {

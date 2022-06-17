@@ -13,5 +13,6 @@
     <color name="lightGrey">#EAEAEA</color>
     <color name="pink">#F63073</color>
     <color name="dimPink">#FFADC9</color>
+    <color name="purplePink">#FF70E7</color>
     <color name="red">#FF2828</color>
 </resources>
