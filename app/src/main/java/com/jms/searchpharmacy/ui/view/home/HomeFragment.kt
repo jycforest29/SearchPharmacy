@@ -164,11 +164,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        binding.banner.let {
-            Glide.with(this)
-                .load(R.drawable.image_main3)
-                .into(it)
-        }
 
         binding.searchMyPlace.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(

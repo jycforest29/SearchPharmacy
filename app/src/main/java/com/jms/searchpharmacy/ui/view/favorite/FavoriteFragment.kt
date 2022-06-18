@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
@@ -47,12 +48,13 @@ class FavoriteFragment : Fragment() {
             (viewHolder as? FavoriteAdapter.FavoriteViewHolder)?.let {
                 val position = it.bindingAdapterPosition
                 val pl = favoriteAdapter.currentList[position]
-                //viewModel.deletePharLocationRegFavorite(pl)
+
                 viewModel.deletePharLocation(pl)
                 Snackbar.make(requireView(), "찜 목록에서 제거되었습니다", Snackbar.LENGTH_SHORT).apply {
                     setAction("취소") {
-                        //viewModel.savePharLocationRegFavorite(pl)
+
                         viewModel.savePharLocation(pl)
+
                     }
                 }.show()
             }
@@ -174,6 +176,7 @@ class FavoriteFragment : Fragment() {
         viewModel.favoritePharLocations.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 favoriteAdapter.submitList(it)
+                binding.favoriteRv.layoutManager = LinearLayoutManager(requireContext())
                 binding.noItemNotice.isVisible = false
             } else {
                 binding.noItemNotice.isVisible = true
