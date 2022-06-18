@@ -6,6 +6,7 @@ import android.view.animation.Transformation
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.jms.a20220602_navermap.data.model.GeoInfo
+import com.jms.searchpharmacy.data.model.SingleLiveEvent
 import com.jms.searchpharmacy.data.model.reversegeo.Coords
 import com.jms.searchpharmacy.data.model.reversegeo.Region
 import com.jms.searchpharmacy.data.model.server.*
@@ -22,20 +23,27 @@ class MainViewModel(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    private val _regionLiveData: MutableLiveData<Region?> = MutableLiveData()
+//    private val _regionLiveData: MutableLiveData<Region?> = MutableLiveData()
+//    val regionLiveData: LiveData<Region?> get() = _regionLiveData
+    private val _regionLiveData: SingleLiveEvent<Region?> = SingleLiveEvent()
     val regionLiveData: LiveData<Region?> get() = _regionLiveData
 
     fun convertCoordsToAddr(latLng: LatLng) = viewModelScope.launch(Dispatchers.IO) {
         val response = mainRepository.convertCoordsToAddr("${latLng.longitude},${latLng.latitude}")
+
         if (response.isSuccessful) {
+
             response.body()?.let { body ->
                 if (body.results?.size!! > 0) {
 
                     val region = body.results[0].region
                     _regionLiveData.postValue(region)
+                } else {
+                    _regionLiveData.postValue(null)
                 }
 
             }
+
         }
 
     }
@@ -251,12 +259,12 @@ class MainViewModel(
     private val plIndexLiveData = MutableLiveData<Int>()
     var plLiveData: LiveData<PharmacyLocation?> =
         Transformations.switchMap(plIndexLiveData) {
-            Log.d("TAG", "찍힌거2: $it")
+
             mainRepository.getPharLocation(it)
         }
 
     fun loadPL(pk: Int) {
-        Log.d("TAG", "찍힌거3: $pk")
+
         plIndexLiveData.value = pk
     }
 

@@ -64,12 +64,15 @@ class MainActivity : AppCompatActivity() {
         setupJetpackNavigation()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         savedInstanceState ?: createLocationRequest()
+        savedInstanceState?.getParcelable<Location>(LAST_MY_PLACE) ?: createLocationRequest()
 
         savedInstanceState?.getParcelable<Location>(LAST_MY_PLACE)?.let {
             myLocation = it
         }
 
     }
+
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createLocationRequest() {
+    fun createLocationRequest() {
 
         locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -150,19 +153,20 @@ class MainActivity : AppCompatActivity() {
 
 
         task.addOnFailureListener {
-
             requestLocation()
         }
         task.addOnSuccessListener {
             //여기서 위치요청
-
             requestLocation()
         }
     }
 
     //현재 위치가 서울인지 파악
     fun onCheckInSeoul(currentLocation: Location) {
+
         mainViewModel.convertCoordsToAddr(LatLng(currentLocation))
+
+        //mainViewModel.convertCoordsToAddr(LatLng(37.4046, -122.2213))
         mainViewModel.regionLiveData.observe(this) { region ->
             region?.area1?.name?.let { siName ->
 
@@ -175,12 +179,15 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다1", Toast.LENGTH_SHORT)
                         .show()
 
                 }
             }
-
+            region ?: run {
+                Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다2", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 

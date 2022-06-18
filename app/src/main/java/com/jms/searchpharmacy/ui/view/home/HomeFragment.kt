@@ -166,6 +166,9 @@ class HomeFragment : Fragment() {
                         .setMessage("현재 GPS 로 기록된 마지막 위치가 없습니다\n잠시 후에 다시 시도해주세요")
                         .setPositiveButton("확인", null)
                         .show()
+
+                    (activity as MainActivity).createLocationRequest()
+
                 }
 
             }

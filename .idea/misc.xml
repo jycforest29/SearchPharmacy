@@ -16,7 +16,10 @@
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/drawable/tab_layout_bg.xml" value="0.179" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/drawable/tit_box_color.xml" value="0.156" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/drawable/white_radius_bg.xml" value="0.194" />
+        <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/drawable/white_radius_stroke_bg.xml" value="0.1" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/activity_main.xml" value="0.14" />
+        <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/dialog_item_select_dong.xml" value="0.13272543059777103" />
+        <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/dialog_select_dong.xml" value="0.13272543059777103" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/fragment_brief.xml" value="0.2595108695652174" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/fragment_detail.xml" value="0.24864130434782608" />
         <entry key="..\:/MyAndroid/SearchPharmacy/app/src/main/res/layout/fragment_detail_conv.xml" value="0.2484375" />
