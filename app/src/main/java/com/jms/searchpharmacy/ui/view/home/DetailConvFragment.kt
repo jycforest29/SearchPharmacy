@@ -40,6 +40,9 @@ class DetailConvFragment : Fragment() {
                     convDate.text = conv.startdate
                     convName.text = conv.name
                 }
+                itemView.setOnClickListener {
+                    viewModel.moveThisPlace(conv.address)
+                }
             }
 
         }
@@ -73,11 +76,7 @@ class DetailConvFragment : Fragment() {
         viewModel.fetchedConvList.observe(viewLifecycleOwner) {
             binding.convRv.adapter = DetailConvAdapter(it)
             binding.convRv.layoutManager = LinearLayoutManager(requireContext())
-            for (i in 0 until if (it.size > 5) 5 else it.size) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.searchConvLoc(it[i].address)
-                }
-            }
+
         }
     }
 

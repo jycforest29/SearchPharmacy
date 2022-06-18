@@ -10,9 +10,11 @@
     <color name="dimBlue">#63899C</color>
     <color name="grey">#4C4C4C</color>
     <color name="dimGrey">#A1A1A1</color>
+    <color name="darkerGrey">#7A7A7A</color>
     <color name="lightGrey">#EAEAEA</color>
     <color name="pink">#F63073</color>
     <color name="dimPink">#FFADC9</color>
     <color name="purplePink">#FF70E7</color>
+    <color name="darkPink">#F63073</color>
     <color name="red">#FF2828</color>
 </resources>

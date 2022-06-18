@@ -1,5 +1,6 @@
 package com.jms.searchpharmacy.ui.view.home
 
+import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.PorterDuff
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -29,9 +31,13 @@ import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.processNextEventInCurrentThread
 import kotlin.properties.Delegates
 
@@ -121,11 +127,11 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             if (isFavoritePL) {
                 //삭제
                 viewModel.deletePharLocation(args.pharmacyLocation)
-                Toast.makeText(requireContext(), "삭제", Toast.LENGTH_SHORT).show()
+
             } else {
                 //추가
                 viewModel.savePharLocation(args.pharmacyLocation)
-                Toast.makeText(requireContext(), "추가", Toast.LENGTH_SHORT).show()
+
             }
         }
 
@@ -159,6 +165,33 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
 
         }
 
+        viewModel.fetchedPharList.observe(viewLifecycleOwner) {
+
+            for (i in 0 until if (it.size > 5) 5 else it.size) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.searchPharLoc(it[i].address)
+                }
+            }
+        }
+
+        viewModel.fetchedHospList.observe(viewLifecycleOwner) {
+
+            for (i in 0 until if (it.size > 5) 5 else it.size) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.searchHospLoc(it[i].address)
+                }
+            }
+        }
+
+        viewModel.fetchedConvList.observe(viewLifecycleOwner) {
+
+            for (i in 0 until if (it.size > 5) 5 else it.size) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.searchConvLoc(it[i].address)
+                }
+            }
+        }
+
 
     }
 
@@ -187,17 +220,53 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
+        binding.moveMyPlaceBtn.setOnClickListener {
+            val myLocation = (activity as MainActivity).myLocation
+            myLocation?.let {
+                val cameraUpdate = CameraUpdate.scrollAndZoomTo(LatLng(it), 16.0).animate(CameraAnimation.Easing)
+                this.naverMap.moveCamera(cameraUpdate)
+                val markerPhar = Marker()
+                markerPhar.apply {
+                    icon = MarkerIcons.BLACK
+                    iconTintColor = Color.DKGRAY
+                    captionText="내위치"
+                    setCaptionAligns(Align.Top)
+                    position = LatLng(it)
+                    map = naverMap
+                }
+            }
+
+
+        }
+
+
+
     }
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        this.naverMap.uiSettings.apply {
-            isLocationButtonEnabled = true
-            isCompassEnabled = true
-        }
 
         setupUISettings()
 
+        viewModel.moveThisResult.observe(viewLifecycleOwner) { geoInfo ->
+
+            geoInfo ?: run {
+                Toast.makeText(requireContext(), "검색 결과 없음", Toast.LENGTH_SHORT).show()
+            }
+
+            geoInfo?.addresses?.get(0)?.let {
+                val latLng = LatLng(it.y!!.toDouble(), it.x!!.toDouble())
+                val cameraUpdate = CameraUpdate.scrollAndZoomTo(latLng, 17.0).animate(CameraAnimation.Easing)
+                this.naverMap.moveCamera(cameraUpdate)
+                val marker = Marker()
+                marker.apply {
+                    icon = MarkerIcons.BLACK
+                    iconTintColor = Color.RED
+                    position = latLng
+                    map = this@DetailFragment.naverMap
+                }
+            }
+        }
 
         viewModel.searchPhar.observe(viewLifecycleOwner) { response ->
             val addresses: List<Addresse>? = response?.addresses
@@ -207,9 +276,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 for (i in it.indices) {
                     val markerPhar = Marker()
                     markerPhar.apply {
-                        icon = OverlayImage.fromResource(R.drawable.ic_phar_marker)
-                        width = 100
-                        height = 100
+                        captionText="약국"
+                        setCaptionAligns(Align.Top)
                         position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
                         map = naverMap
                     }
@@ -224,9 +292,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 for (i in it.indices) {
                     val markerConv = Marker()
                     markerConv.apply {
-                        icon = OverlayImage.fromResource(R.drawable.ic_conv_marker)
-                        width = 100
-                        height = 100
+                        captionText="편의점"
+                        setCaptionAligns(Align.Top)
                         position = LatLng(it[i].y!!.toDouble(), it[i].x!!.toDouble())
                         map = naverMap
                     }
@@ -240,9 +307,8 @@ class DetailFragment : Fragment(), OnMapReadyCallback {
                 for (i in list.indices) {
                     val markerHosp = Marker()
                     markerHosp.apply {
-                        icon = OverlayImage.fromResource(R.drawable.ic_hosp_marker)
-                        width = 100
-                        height = 100
+                        captionText="병원"
+                        setCaptionAligns(Align.Top)
                         position = LatLng(list[i].y!!.toDouble(), list[i].x!!.toDouble())
                         map = naverMap
 

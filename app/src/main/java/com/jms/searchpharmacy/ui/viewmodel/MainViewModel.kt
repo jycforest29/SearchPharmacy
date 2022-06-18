@@ -48,6 +48,23 @@ class MainViewModel(
 
     }
 
+    private val _moveThisResult: SingleLiveEvent<GeoInfo?> = SingleLiveEvent()
+    val moveThisResult: LiveData<GeoInfo?> get() = _moveThisResult
+
+    fun moveThisPlace(addr: String) = viewModelScope.launch(Dispatchers.IO) {
+        val response = mainRepository.searchGeoInfo(addr)
+
+        if (response.isSuccessful) {
+            response.body()?.let { body ->
+                if (body.meta?.totalCount!! > 0) {
+                    _moveThisResult.postValue(body)
+                } else {
+                    _moveThisResult.postValue(null)
+                }
+            }
+        }
+    }
+
     private val _searchPhar = MutableLiveData<GeoInfo>()
     val searchPhar: LiveData<GeoInfo> get() = _searchPhar
 

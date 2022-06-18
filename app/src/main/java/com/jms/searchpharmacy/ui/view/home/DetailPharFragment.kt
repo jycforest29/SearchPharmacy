@@ -40,6 +40,10 @@ class DetailPharFragment : Fragment() {
                     pharDate.text = phar.startdate
                     pharName.text = phar.name
                 }
+
+                itemView.setOnClickListener {
+                    viewModel.moveThisPlace(phar.address)
+                }
             }
 
         }
@@ -75,11 +79,7 @@ class DetailPharFragment : Fragment() {
             binding.pharRv.adapter = DetailPharAdapter(it)
             binding.pharRv.layoutManager = LinearLayoutManager(requireContext())
 
-            for (i in 0 until if (it.size > 5) 5 else it.size) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.searchPharLoc(it[i].address)
-                }
-            }
+
         }
     }
 

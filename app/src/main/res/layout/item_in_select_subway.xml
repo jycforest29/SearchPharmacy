@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/apk/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
+
     >
 
 
@@ -15,9 +16,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lineNumber_layout"
-            android:padding="5dp"
+            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/white_radius_stroke_bg_grey"
             android:baselineAligned="false">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -61,7 +63,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/detailOfLineRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            />
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</FrameLayout>

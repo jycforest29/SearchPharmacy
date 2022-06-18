@@ -15,7 +15,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/fragment_settings"
-        android:icon="@drawable/ic_settings_24"
-        android:title="마이페이지"
+        android:icon="@drawable/ic_info_24"
+        android:title="앱 정보"
         app:showAsAction="always" />
 </menu>

@@ -59,13 +59,13 @@ class SelectSubwayFragment : Fragment() {
                 // 역이름 받아서 배치
                 itemView.apply {
                     itemInDetailSubwayBinding.stationNameText.text = station.name //호선 이름
-                    itemInDetailSubwayBinding.stationNameText.setOnClickListener {
-                        getDongByStation(station.name)
 
-//                        val action = SelectSubwayFragmentDirections.actionFragmentSelectSubwayToFragmentBrief("흑석동")
-//                        findNavController().navigate(action)
+                    setOnClickListener{
+                        getDongByStation(station.name)
                     }
                 }
+
+
             }
         }
 
@@ -229,6 +229,17 @@ class SelectSubwayFragment : Fragment() {
 
                 toggleButton.observe(viewLifecycleOwner) { isClicked ->
                     itemInSelectSubwayBinding.detailOfLineRecyclerView.isVisible = isClicked
+                    if(isClicked) {
+                        //눌렸으면
+                        itemInSelectSubwayBinding.arrowButton.setImageResource(R.drawable.ic_keyboard_arrow_up_24)
+                        itemInSelectSubwayBinding.lineNumberLayout.setBackgroundResource(R.drawable.white_radius_stroke_bg)
+                        itemInSelectSubwayBinding.lineNumberText.setTextColor(resources.getColor(R.color.darkPink))
+                    } else {
+                        itemInSelectSubwayBinding.arrowButton.setImageResource(R.drawable.ic_keyboard_arrow_down_24)
+                        itemInSelectSubwayBinding.lineNumberLayout.setBackgroundResource(R.drawable.white_radius_stroke_bg_grey)
+                        itemInSelectSubwayBinding.lineNumberText.setTextColor(resources.getColor(R.color.darkerGrey))
+
+                    }
                 }
 
 
@@ -238,7 +249,7 @@ class SelectSubwayFragment : Fragment() {
                 this.line = line
 
 //                    itemInSelectSubwayBinding.colorOfLine.circleBackgroundColor = Color.parseColor(line.color)
-                itemInSelectSubwayBinding.lineNumberText.text = line.name
+                itemInSelectSubwayBinding.lineNumberText.text = line.name.removePrefix("0")
                 itemInSelectSubwayBinding.lineNumberLayout.setOnClickListener {
                     toggleButton.postValue(!toggleButton.value!!)
                 }

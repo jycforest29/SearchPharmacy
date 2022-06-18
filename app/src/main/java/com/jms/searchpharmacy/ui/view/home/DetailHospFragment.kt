@@ -41,6 +41,9 @@ class DetailHospFragment : Fragment() {
                     hospType.text = hosp.type
 
                 }
+                itemView.setOnClickListener {
+                    viewModel.moveThisPlace(hosp.address)
+                }
             }
 
         }
@@ -75,11 +78,7 @@ class DetailHospFragment : Fragment() {
             binding.hospRv.adapter = DetailHospAdapter(it)
             binding.hospRv.layoutManager = LinearLayoutManager(requireContext())
 
-            for (i in 0 until if (it.size > 5) 5 else it.size) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.searchHospLoc(it[i].address)
-                }
-            }
+
         }
 
     }

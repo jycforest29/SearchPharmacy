@@ -2,6 +2,7 @@ package com.jms.searchpharmacy.ui.view.home
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -87,6 +88,39 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(action)
                 }
 
+                itemBinding.shareBtn.setOnClickListener {
+                    Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(
+                            Intent.EXTRA_TEXT, getString(
+                                R.string.send_pharLocation,
+                                pl.dong,
+                                getString(R.string.load_addr, pl.load_address),
+                                getString(R.string.hosp_cnt, pl.hospital_count.toString()),
+                                getString(R.string.phar_cnt, pl.pharmacy_count.toString()),
+                                getString(R.string.doc_cnt, pl.doctorcount.toString()),
+                                getString(R.string.conv_cnt, pl.convenience_count.toString()),
+                                getString(
+                                    R.string.hosp_per_phar,
+                                    String.format("%.2f", pl.hospital_per_pharmacy)
+                                ),
+                                getString(
+                                    R.string.doc_per_phar,
+                                    String.format("%.2f", pl.doctor_per_pharmacy)
+                                ),
+                                getString(
+                                    R.string.conv_per_phar,
+                                    String.format("%.2f", pl.convenience_per_pharmacy)
+                                )
+                            )
+                        )
+                    }.also { intent ->
+                        val chooserIntent =
+                            Intent.createChooser(intent, getString(R.string.send_title))
+                        startActivity(chooserIntent)
+                    }
+                }
+
             }
 
         }
@@ -103,7 +137,7 @@ class HomeFragment : Fragment() {
         override fun getItemCount(): Int = PLList.size
     }
 
-    private lateinit var locationManager: LocationManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,14 +181,9 @@ class HomeFragment : Fragment() {
             ) {
                 onCheckPermission()
             } else {
-//                locationManager =
-//                    requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//
+
 
                 val currentLocation: Location? = (activity as MainActivity).myLocation
-//                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-//                        ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-//                        ?: FusedLocationSource(this, PERMISSION_REQUEST_CODE).lastLocation
 
 
                 currentLocation?.let {

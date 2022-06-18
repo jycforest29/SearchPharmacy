@@ -23,6 +23,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.db.SearchPharDatabase
 import com.jms.searchpharmacy.databinding.ActivityMainBinding
+
 import com.jms.searchpharmacy.repository.MainRepository
 import com.jms.searchpharmacy.ui.view.home.HomeFragment
 import com.jms.searchpharmacy.ui.view.home.HomeFragmentDirections
@@ -179,13 +180,13 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다1", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다", Toast.LENGTH_SHORT)
                         .show()
 
                 }
             }
             region ?: run {
-                Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다2", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "현재 서울 지역만 서비스가 가능합니다", Toast.LENGTH_SHORT)
                     .show()
             }
         }
