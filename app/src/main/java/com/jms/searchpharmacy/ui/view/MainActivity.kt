@@ -78,7 +78,56 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestLocation(){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+
+        } else {
+            //퍼미션 요청
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    Constants.PERMISSION_REQUEST_CODE
+                )
+
+
+            } else {
+
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    Constants.PERMISSION_REQUEST_CODE
+                )
+
+            }
+        }
+    }
+
     private fun createLocationRequest() {
+
         locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 10000
@@ -89,6 +138,7 @@ class MainActivity : AppCompatActivity() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
                 myLocation = locationResult.lastLocation
+                Log.d("TAG","현재위치: $myLocation")
             }
         }
 
@@ -98,53 +148,15 @@ class MainActivity : AppCompatActivity() {
         val client: SettingsClient = LocationServices.getSettingsClient(this)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 
+
+        task.addOnFailureListener {
+
+            requestLocation()
+        }
         task.addOnSuccessListener {
             //여기서 위치요청
 
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper()
-                )
-            } else {
-                //퍼미션 요청
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(
-                            android.Manifest.permission.ACCESS_FINE_LOCATION,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION
-                        ),
-                        Constants.PERMISSION_REQUEST_CODE
-                    )
-
-
-                } else {
-
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(
-                            android.Manifest.permission.ACCESS_FINE_LOCATION,
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION
-                        ),
-                        Constants.PERMISSION_REQUEST_CODE
-                    )
-
-                }
-            }
+            requestLocation()
         }
     }
 
