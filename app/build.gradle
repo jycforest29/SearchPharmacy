@@ -95,4 +95,9 @@ dependencies {
     //PreferenceScreen
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.preference:preference:1.2.0'
+
+    //Chart
+    implementation 'io.github.cliffgr:cpbar:1.1.0'
+
+
 }

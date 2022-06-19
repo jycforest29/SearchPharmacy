@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.jms.searchpharmacy.R
 import com.jms.searchpharmacy.data.model.server.PharmacyLocation
 import com.jms.searchpharmacy.databinding.FragmentBriefBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefBinding
+import com.jms.searchpharmacy.databinding.ItemInBriefChartBinding
 import com.jms.searchpharmacy.databinding.ItemInBriefFieldNameBinding
 import com.jms.searchpharmacy.ui.view.MainActivity
 import com.jms.searchpharmacy.ui.viewmodel.MainViewModel
@@ -44,7 +46,7 @@ class BriefFragment : Fragment() {
     private inner class BriefAdapter(val PLList: List<PharmacyLocation>) :
         RecyclerView.Adapter<BriefAdapter.BriefViewHolder>() {
 
-        inner class BriefViewHolder(val itemBinding: ItemInBriefBinding) :
+        inner class BriefViewHolder(val itemBinding: ItemInBriefChartBinding) :
             RecyclerView.ViewHolder(itemBinding.root) {
 
 
@@ -53,8 +55,80 @@ class BriefFragment : Fragment() {
                     roadNameAddr.text = pl.load_address
                     hospitalCnt.text = pl.hospital_count.toString()
                     pharmacyCnt.text = pl.pharmacy_count.toString()
-                    ratio.text = String.format("%.2f", pl.hospital_per_pharmacy)
                     convStoreCnt.text = pl.convenience_count.toString()
+                    docCnt.text = pl.doctorcount.toString()
+
+                    val hospPharAnal: String = if (pl.pharmacy_count == 0) {
+                        "병원만 있는 지역입니다"
+                    } else {
+                        if (pl.hospital_count > pl.pharmacy_count) {
+                            "약국이 병원보다 ${
+                                String.format(
+                                    "%.1f",
+                                    pl.hospital_count / pl.pharmacy_count.toFloat()
+                                )
+                            }배 적은 지역입니다"
+                        } else if (pl.hospital_count == pl.pharmacy_count) {
+                            "약국과 병원의 수가 같은 지역입니다"
+                        } else {
+                            "약국이 병원보다 ${
+                                String.format(
+                                    "%.1f",
+                                    pl.pharmacy_count / pl.hospital_count.toFloat()
+                                )
+                            }배 많은 지역입니다"
+                        }
+
+                    }
+
+                    val convPharAnal: String = if (pl.pharmacy_count == 0) {
+                        "상비약 취급 편의점만 있는 지역입니다"
+                    } else {
+                        if (pl.convenience_count > pl.pharmacy_count) {
+                            "약국이 상비약 취급 편의점보다 ${
+                                String.format(
+                                    "%.1f",
+                                    pl.convenience_count / pl.pharmacy_count.toFloat()
+                                )
+                            }배 적은 지역입니다"
+                        } else if (pl.convenience_count == pl.pharmacy_count) {
+                            "약국과 상비약 취급 편의점의 수가 같은 지역입니다"
+                        } else {
+                            "약국이 상비약 취급 편의점보다 ${
+                                String.format(
+                                    "%.1f",
+                                    pl.pharmacy_count / pl.convenience_count.toFloat()
+                                )
+                            }배 많은 지역입니다"
+                        }
+
+                    }
+
+                    pharHospAnalyText.text = hospPharAnal
+
+                    pharConvAnalyText.text = convPharAnal
+
+                    pharHospGraph.apply {
+                        val pharHospSum = pl.hospital_count + pl.pharmacy_count.toFloat()
+
+                        setValues(
+                            pl.pharmacy_count / pharHospSum * 100,
+                            pl.hospital_count / pharHospSum * 100
+                        )
+
+
+                    }
+                    pharConvGraph.apply {
+
+                        val pharConvSum = pl.pharmacy_count + pl.convenience_count.toFloat()
+
+                        setValues(
+                            pl.pharmacy_count / pharConvSum * 100,
+                            pl.convenience_count / pharConvSum * 100
+                        )
+
+                    }
+
                 }
 
                 itemView.setOnClickListener {
@@ -63,6 +137,10 @@ class BriefFragment : Fragment() {
                         BriefFragmentDirections.actionFragmentBriefToFragmentDetail(pl)
                     findNavController().navigate(action)
                 }
+                itemBinding.chartBtn.setOnClickListener {
+
+                    itemBinding.chartLayout.isVisible = !itemBinding.chartLayout.isVisible
+                }
 
             }
 
@@ -70,7 +148,7 @@ class BriefFragment : Fragment() {
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BriefViewHolder {
-            val binding = ItemInBriefBinding.inflate(layoutInflater, parent, false)
+            val binding = ItemInBriefChartBinding.inflate(layoutInflater, parent, false)
             return BriefViewHolder(binding)
 
         }
@@ -110,7 +188,7 @@ class BriefFragment : Fragment() {
             }
         }
 
-        if(args.dongName.isNullOrEmpty()) {
+        if (args.dongName.isNullOrEmpty()) {
             binding.briefInfoRecyclerView.adapter = BriefAdapter(emptyList())
             binding.briefInfoRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
@@ -172,7 +250,7 @@ class BriefFragment : Fragment() {
                                 binding.textInputLayout.error = "'동'으로 끝나야 합니다 ex) 역삼동"
 
                             }
-                            Log.d("TAG","tit: $it")
+                            Log.d("TAG", "tit: $it")
                         }
                     }
 

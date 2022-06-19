@@ -248,7 +248,9 @@ class SelectSubwayFragment : Fragment() {
             fun bind(line: Line) {
                 this.line = line
 
-//                    itemInSelectSubwayBinding.colorOfLine.circleBackgroundColor = Color.parseColor(line.color)
+                line.color?.let {
+                    itemInSelectSubwayBinding.colorOfLine.circleBackgroundColor = Color.parseColor(line.color)
+                }
                 itemInSelectSubwayBinding.lineNumberText.text = line.name.removePrefix("0")
                 itemInSelectSubwayBinding.lineNumberLayout.setOnClickListener {
                     toggleButton.postValue(!toggleButton.value!!)
