@@ -1,6 +1,6 @@
 # 약국 입지 찾기 어플
-- 약국 창업에 필요한 입지정보를 찾을 수 있는 어플
-서버, 데이터: https://github.com/jycforest29/SearchPharmacy
+- 서울 지역 내 약국 창업에 필요한 입지정보를 찾을 수 있는 어플
+- 서버, 데이터: https://github.com/jycforest29/SearchPharmacy
 
 # 노션 주소
 https://inquisitive-brain-9f7.notion.site/f24e0aac65444f8eac31412fc5e0ca3e
