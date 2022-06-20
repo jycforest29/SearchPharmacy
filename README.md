@@ -3,7 +3,7 @@
 # 노션 주소
 https://inquisitive-brain-9f7.notion.site/f24e0aac65444f8eac31412fc5e0ca3e
 
-<img src="https://user-images.githubusercontent.com/90887876/174552934-1202cd89-58e8-47e6-ab18-d08bdc97daf6.PNG" width="1000" height="700"/>
+<img src="https://user-images.githubusercontent.com/90887876/174552934-1202cd89-58e8-47e6-ab18-d08bdc97daf6.PNG" width="900" height="600"/>
 
 
 ## 실제 구동 화면 ##
