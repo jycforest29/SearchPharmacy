@@ -1,4 +1,5 @@
 # 약국 입지 찾기 어플
+- 약국 창업에 필요한 입지정보를 찾을 수 있는 어플
 서버, 데이터: https://github.com/jycforest29/SearchPharmacy
 
 # 노션 주소
