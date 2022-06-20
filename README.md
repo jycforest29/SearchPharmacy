@@ -1,4 +1,5 @@
 # 약국 입지 찾기 어플
+서버: https://github.com/jycforest29/SearchPharmacy
 
 # 노션 주소
 https://inquisitive-brain-9f7.notion.site/f24e0aac65444f8eac31412fc5e0ca3e
